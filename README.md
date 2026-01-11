@@ -8,7 +8,7 @@ CareConnect is a multi-platform care coordination application designed for low-v
 ## Team Members
 - Member 1 — GitHub: @gjurado1
 - Member 2 — GitHub: @Stinkybootsllc
-- Member 3 — GitHub: @username
+- Member 3 — GitHub: @username (TBD)
 
 ## Team Charter
 - [Team Charter](docs/team-charter.docx)
