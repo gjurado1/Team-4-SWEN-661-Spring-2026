@@ -1,0 +1,30 @@
+# OS
+.DS_Store
+Thumbs.db
+
+# Editors/IDEs
+.vscode/
+.idea/
+*.iml
+
+# Logs
+*.log
+
+# Env files
+.env
+.env.*
+!.env.example
+
+# Build outputs (generic)
+dist/
+build/
+out/
+coverage/
+
+# Node
+node_modules/
+
+# Python (if used in scripts)
+__pycache__/
+*.pyc
+.venv/
