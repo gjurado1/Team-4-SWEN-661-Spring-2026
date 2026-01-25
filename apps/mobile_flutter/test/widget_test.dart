@@ -4,7 +4,7 @@ import 'package:mobile_flutter/app.dart';
 
 void main() {
   testWidgets('App boots', (tester) async {
-    await tester.pumpWidget(const ProviderScope(child: MyApp()));
+    await tester.pumpWidget(const ProviderScope(child: CareConnectApp()));
     expect(find.text('Login'), findsOneWidget);
   });
 }
