@@ -1,3 +1,6 @@
+package-lock.json
+package.json
+
 # OS
 .DS_Store
 Thumbs.db
@@ -20,6 +23,11 @@ dist/
 build/
 out/
 coverage/
+# Dependencies
+/node_modules
+/dist
+/build
+.env
 
 # Node
 node_modules/
