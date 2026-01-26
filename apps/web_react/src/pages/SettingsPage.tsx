@@ -14,58 +14,73 @@ import {
   Globe, 
   HelpCircle,
   ChevronRight,
-  RotateCcw
+  RotateCcw,
+  ChevronDown
 } from 'lucide-react';
 
 export const SettingsPage: React.FC = () => {
   const navigate = useNavigate();
   const [showRollbackModal, setShowRollbackModal] = useState(false);
+  const [expandedSections, setExpandedSections] = useState<{ [key: string]: boolean }>({
+    accessibility: true,
+    account: false,
+    notifications: false,
+    privacy: false,
+    help: false
+  });
+
+  const toggleSection = (sectionKey: string) => {
+    setExpandedSections(prev => ({
+      ...prev,
+      [sectionKey]: !prev[sectionKey]
+    }));
+  };
+
+  const handleRollback = () => {
+    setShowRollbackModal(false);
+    setExpandedSections({
+      accessibility: true,
+      account: false,
+      notifications: false,
+      privacy: false,
+      help: false
+    });
+  };
 
   const settingsSections = [
     {
       title: 'Account',
-      icon: <User size={24} />,
+      icon: <User size={28} />,
       items: [
-        { label: 'Profile Information', action: () => navigate('/profile') },
-        { label: 'Password & Security', icon: <Lock size={20} /> },
-        { label: 'Notifications', icon: <Bell size={20} /> }
+        { label: 'Profile Settings', action: () => navigate('/profile'), icon: <User size={20} /> },
+        { label: 'Change Password', action: () => {}, icon: <Lock size={20} /> }
       ]
     },
     {
-      title: 'Accessibility',
-      icon: <Eye size={24} />,
+      title: 'Notifications',
+      icon: <Bell size={28} />,
       items: [
-        { label: 'Vision & Display', highlight: true },
-        { label: 'Navigation Settings' },
-        { label: 'Text & Clarity' }
+        { label: 'Push Notifications', action: () => {}, icon: <Bell size={20} /> },
+        { label: 'Email Alerts', action: () => {}, icon: <Bell size={20} /> }
       ]
     },
     {
-      title: 'Developer',
-      icon: <Globe size={24} />,
+      title: 'Privacy & Security',
+      icon: <Lock size={28} />,
       items: [
-        { label: 'Component Library', action: () => navigate('/component-library') },
-        { label: 'Accessibility Annotations', action: () => navigate('/accessibility-annotations') },
-        { label: 'Responsive Showcase', action: () => navigate('/responsive-showcase') }
+        { label: 'Privacy Policy', action: () => {}, icon: <Globe size={20} /> },
+        { label: 'Data Usage', action: () => {}, icon: <Lock size={20} /> }
       ]
     },
     {
-      title: 'General',
-      icon: <Globe size={24} />,
+      title: 'Help & Support',
+      icon: <HelpCircle size={28} />,
       items: [
-        { label: 'Language & Region' },
-        { label: 'Privacy Policy' },
-        { label: 'Help & Support', icon: <HelpCircle size={20} /> }
+        { label: 'FAQ', action: () => {}, icon: <HelpCircle size={20} /> },
+        { label: 'Contact Us', action: () => {}, icon: <Globe size={20} /> }
       ]
     }
   ];
-
-  const handleRollback = () => {
-    // Reset to default settings
-    localStorage.removeItem('careconnect-theme');
-    localStorage.removeItem('careconnect-textsize');
-    window.location.reload();
-  };
 
   return (
     <div 
@@ -106,85 +121,112 @@ export const SettingsPage: React.FC = () => {
       }}>
         {/* Accessibility Preferences - Featured */}
         <div>
-          <h2 className="mb-4 flex items-center gap-2">
-            <Eye size={28} className="text-[var(--button-primary)]" />
-            Accessibility Preferences
-          </h2>
+          <button
+            onClick={() => toggleSection('accessibility')}
+            className="w-full mb-4 flex items-center justify-between hover:opacity-80 transition-opacity"
+          >
+            <h2 className="flex items-center gap-2">
+              <Eye size={28} className="text-[var(--button-primary)]" />
+              Accessibility Preferences
+            </h2>
+            <ChevronDown 
+              size={24} 
+              className={`text-[var(--text-secondary)] transition-transform ${expandedSections.accessibility ? 'rotate-180' : ''}`}
+            />
+          </button>
 
-          <Card className="p-6 mb-6">
-            <ThemeSelector />
-          </Card>
+          {expandedSections.accessibility && (
+            <>
+              <Card className="p-6 mb-6">
+                <ThemeSelector />
+              </Card>
 
-          <Card className="p-6 mb-6">
-            <TextSizeControl />
-          </Card>
+              <Card className="p-6 mb-6">
+                <TextSizeControl />
+              </Card>
 
-          {/* Additional Accessibility Options */}
-          <Card className="p-6">
-            <h3 className="mb-4">Additional Options</h3>
-            <div className="space-y-3">
-              <label className="flex items-center justify-between p-3 bg-[var(--bg-primary)] rounded-lg cursor-pointer hover:bg-[var(--border)]/20 transition-colors">
-                <div>
-                  <div className="font-medium">Reduce Motion</div>
-                  <div className="text-sm text-[var(--text-secondary)]">Minimize animations</div>
+              {/* Additional Accessibility Options */}
+              <Card className="p-6">
+                <h3 className="mb-4">Additional Options</h3>
+                <div className="space-y-3">
+                  <label className="flex items-center justify-between p-3 bg-[var(--bg-primary)] rounded-lg cursor-pointer hover:bg-[var(--border)]/20 transition-colors">
+                    <div>
+                      <div className="font-medium">Reduce Motion</div>
+                      <div className="text-sm text-[var(--text-secondary)]">Minimize animations</div>
+                    </div>
+                    <input type="checkbox" className="w-6 h-6" />
+                  </label>
+
+                  <label className="flex items-center justify-between p-3 bg-[var(--bg-primary)] rounded-lg cursor-pointer hover:bg-[var(--border)]/20 transition-colors">
+                    <div>
+                      <div className="font-medium">Enhanced Focus Indicators</div>
+                      <div className="text-sm text-[var(--text-secondary)]">Stronger focus outlines</div>
+                    </div>
+                    <input type="checkbox" defaultChecked className="w-6 h-6" />
+                  </label>
+
+                  <label className="flex items-center justify-between p-3 bg-[var(--bg-primary)] rounded-lg cursor-pointer hover:bg-[var(--border)]/20 transition-colors">
+                    <div>
+                      <div className="font-medium">Large Touch Targets</div>
+                      <div className="text-sm text-[var(--text-secondary)]">Bigger buttons and controls</div>
+                    </div>
+                    <input type="checkbox" defaultChecked className="w-6 h-6" />
+                  </label>
+
+                  <label className="flex items-center justify-between p-3 bg-[var(--bg-primary)] rounded-lg cursor-pointer hover:bg-[var(--border)]/20 transition-colors">
+                    <div>
+                      <div className="font-medium">Screen Reader Support</div>
+                      <div className="text-sm text-[var(--text-secondary)]">Optimize for assistive tech</div>
+                    </div>
+                    <input type="checkbox" className="w-6 h-6" />
+                  </label>
                 </div>
-                <input type="checkbox" className="w-6 h-6" />
-              </label>
-
-              <label className="flex items-center justify-between p-3 bg-[var(--bg-primary)] rounded-lg cursor-pointer hover:bg-[var(--border)]/20 transition-colors">
-                <div>
-                  <div className="font-medium">Enhanced Focus Indicators</div>
-                  <div className="text-sm text-[var(--text-secondary)]">Stronger focus outlines</div>
-                </div>
-                <input type="checkbox" defaultChecked className="w-6 h-6" />
-              </label>
-
-              <label className="flex items-center justify-between p-3 bg-[var(--bg-primary)] rounded-lg cursor-pointer hover:bg-[var(--border)]/20 transition-colors">
-                <div>
-                  <div className="font-medium">Large Touch Targets</div>
-                  <div className="text-sm text-[var(--text-secondary)]">Bigger buttons and controls</div>
-                </div>
-                <input type="checkbox" defaultChecked className="w-6 h-6" />
-              </label>
-
-              <label className="flex items-center justify-between p-3 bg-[var(--bg-primary)] rounded-lg cursor-pointer hover:bg-[var(--border)]/20 transition-colors">
-                <div>
-                  <div className="font-medium">Screen Reader Support</div>
-                  <div className="text-sm text-[var(--text-secondary)]">Optimize for assistive tech</div>
-                </div>
-                <input type="checkbox" className="w-6 h-6" />
-              </label>
-            </div>
-          </Card>
+              </Card>
+            </>
+          )}
         </div>
 
         {/* Other Settings Sections */}
-        {settingsSections.map((section, idx) => (
-          <div key={idx}>
-            <h2 className="mb-4 flex items-center gap-2">
-              <span className="text-[var(--button-primary)]">{section.icon}</span>
-              {section.title}
-            </h2>
+        {settingsSections.map((section, idx) => {
+          const sectionKey = section.title.toLowerCase().replace(/\s+&\s+/g, '').replace(/\s+/g, '');
+          return (
+            <div key={idx}>
+              <button
+                onClick={() => toggleSection(sectionKey)}
+                className="w-full mb-4 flex items-center justify-between hover:opacity-80 transition-opacity"
+              >
+                <h2 className="flex items-center gap-2">
+                  <span className="text-[var(--button-primary)]">{section.icon}</span>
+                  {section.title}
+                </h2>
+                <ChevronDown 
+                  size={24} 
+                  className={`text-[var(--text-secondary)] transition-transform ${expandedSections[sectionKey] ? 'rotate-180' : ''}`}
+                />
+              </button>
 
-            <Card className="divide-y-2 divide-[var(--border)]">
-              {section.items.map((item, itemIdx) => (
-                <button
-                  key={itemIdx}
-                  onClick={item.action}
-                  className={`w-full flex items-center justify-between p-4 hover:bg-[var(--bg-primary)] transition-colors ${
-                    item.highlight ? 'bg-[var(--alert-info-bg)]' : ''
-                  }`}
-                >
-                  <div className="flex items-center gap-3">
-                    {item.icon}
-                    <span className="font-medium">{item.label}</span>
-                  </div>
-                  <ChevronRight size={20} className="text-[var(--text-secondary)]" />
-                </button>
-              ))}
-            </Card>
-          </div>
-        ))}
+              {expandedSections[sectionKey] && (
+                <Card className="divide-y-2 divide-[var(--border)]">
+                  {section.items.map((item, itemIdx) => (
+                    <button
+                      key={itemIdx}
+                      onClick={item.action}
+                      className={`w-full flex items-center justify-between p-4 hover:bg-[var(--bg-primary)] transition-colors ${
+                        item.highlight ? 'bg-[var(--alert-info-bg)]' : ''
+                      }`}
+                    >
+                      <div className="flex items-center gap-3">
+                        {item.icon}
+                        <span className="font-medium">{item.label}</span>
+                      </div>
+                      <ChevronRight size={20} className="text-[var(--text-secondary)]" />
+                    </button>
+                  ))}
+                </Card>
+              )}
+            </div>
+          );
+        })}
 
         {/* App Info */}
         <Card className="p-6 text-center">
