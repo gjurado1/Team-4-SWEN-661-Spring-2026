@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router';
 import { Card } from '../components/ui/Card';
-import { BottomNav } from '../components/navigation/BottomNav';
 import { Button } from '../components/ui/Button';
-import { Input } from '../components/ui/Input';
+import { HeaderVoiceButton } from '../components/navigation/HeaderVoiceButton';
 import { ArrowLeft } from 'lucide-react';
 
 export const PatientCheckInPage: React.FC = () => {
@@ -22,13 +21,13 @@ export const PatientCheckInPage: React.FC = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (selectedMood) {
-      // Submit check-in
+      // Submit check-in (demo)
       navigate('/patient/dashboard');
     }
   };
 
   return (
-    <div 
+    <div
       className="min-h-screen bg-[var(--bg-primary)] relative"
       style={{
         paddingTop: 'max(env(safe-area-inset-top, 0px), 24px)',
@@ -38,30 +37,41 @@ export const PatientCheckInPage: React.FC = () => {
       }}
     >
       {/* Header */}
-      <header className="bg-[var(--bg-surface)] border-b-2 border-[var(--border)] py-4 sticky top-0 z-40" style={{
-        marginTop: 'calc(-1 * max(env(safe-area-inset-top, 0px), 24px))',
-        paddingTop: 'calc(max(env(safe-area-inset-top, 0px), 24px) + 16px + 1rem)',
-        paddingLeft: 'calc(20px + env(safe-area-inset-left))',
-        paddingRight: 'calc(20px + env(safe-area-inset-right))'
-      }}>
-        <div className="flex items-center gap-3">
-          <button
-            onClick={() => navigate('/patient/dashboard')}
-            className="p-2 hover:bg-[var(--bg-primary)] rounded-lg transition-colors"
-            aria-label="Back"
-          >
-            <ArrowLeft size={24} />
-          </button>
-          <h1>Daily Check-In</h1>
+      <header
+        className="bg-[var(--bg-surface)] border-b-2 border-[var(--border)] py-4 sticky top-0 z-40"
+        style={{
+          marginTop: 'calc(-1 * max(env(safe-area-inset-top, 0px), 24px))',
+          paddingTop: 'calc(max(env(safe-area-inset-top, 0px), 24px) + 16px + 1rem)',
+          paddingLeft: 'calc(20px + env(safe-area-inset-left))',
+          paddingRight: 'calc(20px + env(safe-area-inset-right))'
+        }}
+      >
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => navigate('/patient/dashboard')}
+              className="p-2 hover:bg-[var(--bg-primary)] rounded-lg transition-colors"
+              aria-label="Back"
+            >
+              <ArrowLeft size={24} />
+            </button>
+            <h1>Daily Check-In</h1>
+          </div>
+
+          {/* ✅ Voice button + actions */}
+          <HeaderVoiceButton />
         </div>
       </header>
 
-      <div className="space-y-6" style={{
-        paddingTop: '20px',
-        paddingLeft: 'calc(20px + env(safe-area-inset-left))',
-        paddingRight: 'calc(20px + env(safe-area-inset-right))',
-        paddingBottom: '20px'
-      }}>
+      <div
+        className="space-y-6"
+        style={{
+          paddingTop: '20px',
+          paddingLeft: 'calc(20px + env(safe-area-inset-left))',
+          paddingRight: 'calc(20px + env(safe-area-inset-right))',
+          paddingBottom: '20px'
+        }}
+      >
         <Card className="p-6">
           <p className="text-center text-[var(--text-secondary)] mb-6">
             Share how you're feeling today
@@ -106,12 +116,7 @@ export const PatientCheckInPage: React.FC = () => {
             </div>
 
             {/* Submit Button */}
-            <Button
-              type="submit"
-              variant="primary"
-              disabled={!selectedMood}
-              className="w-full"
-            >
+            <Button type="submit" variant="primary" disabled={!selectedMood} className="w-full">
               Submit Check-In
             </Button>
 
@@ -123,8 +128,6 @@ export const PatientCheckInPage: React.FC = () => {
           </form>
         </Card>
       </div>
-
-      <BottomNav variant="patient" />
     </div>
   );
 };

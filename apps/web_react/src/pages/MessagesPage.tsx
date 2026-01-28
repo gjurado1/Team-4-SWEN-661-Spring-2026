@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router';
 import { Card } from '../components/ui/Card';
-import { BottomNav } from '../components/navigation/BottomNav';
 import { Button } from '../components/ui/Button';
+import { HeaderVoiceButton } from '../components/navigation/HeaderVoiceButton';
 import { ArrowLeft, Send } from 'lucide-react';
 
 interface Message {
@@ -31,13 +31,13 @@ export const MessagesPage: React.FC = () => {
 
   const handleSend = () => {
     if (newMessage.trim()) {
-      // Send message logic
+      // Send message logic (demo)
       setNewMessage('');
     }
   };
 
   return (
-    <div 
+    <div
       className="min-h-screen bg-[var(--bg-primary)] relative"
       style={{
         paddingTop: 'max(env(safe-area-inset-top, 0px), 24px)',
@@ -47,30 +47,41 @@ export const MessagesPage: React.FC = () => {
       }}
     >
       {/* Header */}
-      <header className="bg-[var(--bg-surface)] border-b-2 border-[var(--border)] py-4 sticky top-0 z-40" style={{
-        marginTop: 'calc(-1 * max(env(safe-area-inset-top, 0px), 24px))',
-        paddingTop: 'calc(max(env(safe-area-inset-top, 0px), 24px) + 16px + 1rem)',
-        paddingLeft: 'calc(20px + env(safe-area-inset-left))',
-        paddingRight: 'calc(20px + env(safe-area-inset-right))'
-      }}>
-        <div className="flex items-center gap-3">
-          <button
-            onClick={() => navigate(-1)}
-            className="p-2 hover:bg-[var(--bg-primary)] rounded-lg transition-colors"
-            aria-label="Back"
-          >
-            <ArrowLeft size={24} />
-          </button>
-          <h1>Messages</h1>
+      <header
+        className="bg-[var(--bg-surface)] border-b-2 border-[var(--border)] py-4 sticky top-0 z-40"
+        style={{
+          marginTop: 'calc(-1 * max(env(safe-area-inset-top, 0px), 24px))',
+          paddingTop: 'calc(max(env(safe-area-inset-top, 0px), 24px) + 16px + 1rem)',
+          paddingLeft: 'calc(20px + env(safe-area-inset-left))',
+          paddingRight: 'calc(20px + env(safe-area-inset-right))'
+        }}
+      >
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => navigate(-1)}
+              className="p-2 hover:bg-[var(--bg-primary)] rounded-lg transition-colors"
+              aria-label="Back"
+            >
+              <ArrowLeft size={24} />
+            </button>
+            <h1>Messages</h1>
+          </div>
+
+          {/* ✅ Voice button + actions */}
+          <HeaderVoiceButton />
         </div>
       </header>
 
-      <div className="space-y-6" style={{
-        paddingTop: '20px',
-        paddingLeft: 'calc(20px + env(safe-area-inset-left))',
-        paddingRight: 'calc(20px + env(safe-area-inset-right))',
-        paddingBottom: '20px'
-      }}>
+      <div
+        className="space-y-6"
+        style={{
+          paddingTop: '20px',
+          paddingLeft: 'calc(20px + env(safe-area-inset-left))',
+          paddingRight: 'calc(20px + env(safe-area-inset-right))',
+          paddingBottom: '20px'
+        }}
+      >
         {/* Conversations List */}
         <div className="space-y-3">
           {conversations.map((conv) => (
@@ -101,8 +112,10 @@ export const MessagesPage: React.FC = () => {
 
         {/* Message Thread Example */}
         <Card className="p-4">
-          <h3 className="mb-4 pb-3 border-b-2 border-[var(--border)]">Conversation with Dr. Sarah Miller</h3>
-          
+          <h3 className="mb-4 pb-3 border-b-2 border-[var(--border)]">
+            Conversation with Dr. Sarah Miller
+          </h3>
+
           <div className="space-y-4 mb-4 max-h-[400px] overflow-y-auto">
             {messages.map((msg) => (
               <div
@@ -117,7 +130,11 @@ export const MessagesPage: React.FC = () => {
                   }`}
                 >
                   <p>{msg.text}</p>
-                  <p className={`text-xs mt-1 ${msg.sender === 'user' ? 'text-white/70' : 'text-[var(--text-secondary)]'}`}>
+                  <p
+                    className={`text-xs mt-1 ${
+                      msg.sender === 'user' ? 'text-white/70' : 'text-[var(--text-secondary)]'
+                    }`}
+                  >
                     {msg.time}
                   </p>
                 </div>
@@ -146,8 +163,6 @@ export const MessagesPage: React.FC = () => {
           </div>
         </Card>
       </div>
-
-      <BottomNav variant="patient" />
     </div>
   );
 };

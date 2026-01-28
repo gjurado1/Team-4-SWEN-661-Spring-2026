@@ -24,15 +24,20 @@ export const LoginPage: React.FC = () => {
 
     // Demo login logic
     if (username.toLowerCase().includes('caregiver') || username === 'demo') {
+      localStorage.setItem('careconnect-role', 'caregiver'); // ✅ NEW
       navigate('/caregiver/dashboard');
     } else if (username.toLowerCase().includes('patient')) {
+      localStorage.setItem('careconnect-role', 'patient'); // ✅ NEW
       navigate('/patient/dashboard');
     } else {
+      localStorage.removeItem('careconnect-role'); // ✅ NEW (optional)
       setError('Invalid username or password. Please try again.');
     }
   };
 
   const handleDemoLogin = (role: 'caregiver' | 'patient') => {
+    localStorage.setItem('careconnect-role', role); // ✅ NEW
+
     if (role === 'caregiver') {
       navigate('/caregiver/dashboard');
     } else {
@@ -41,7 +46,7 @@ export const LoginPage: React.FC = () => {
   };
 
   return (
-    <div 
+    <div
       className="min-h-screen flex flex-col items-center bg-[var(--bg-primary)]"
       style={{
         paddingTop: 'calc(env(safe-area-inset-top) + 50px)',
@@ -50,8 +55,7 @@ export const LoginPage: React.FC = () => {
         paddingBottom: 'calc(20px + env(safe-area-inset-bottom))'
       }}
     >
-      <div className="w-full max-w-md">{/* removed px-4 since safe area padding is now in parent */}
-
+      <div className="w-full max-w-md">
         {/* Logo and Header */}
         <div className="text-center mb-6 fade-in w-full flex justify-center">
           <Logo size="lg" showTagline={true} />
@@ -102,7 +106,7 @@ export const LoginPage: React.FC = () => {
 
             {showResetConfirm && (
               <Alert type="info" className="mb-4">
-                Password reset link sent! A password reset link has been sent to test@test.com. 
+                Password reset link sent! A password reset link has been sent to test@test.com.
                 Please check your inbox and follow the instructions.
               </Alert>
             )}
@@ -135,7 +139,7 @@ export const LoginPage: React.FC = () => {
           <p className="text-sm text-[var(--text-secondary)] text-center mb-4">
             Use these credentials to explore CareConnect
           </p>
-          
+
           <div className="space-y-3">
             <button
               onClick={() => handleDemoLogin('patient')}
@@ -146,7 +150,7 @@ export const LoginPage: React.FC = () => {
                 Username: testpatient
               </div>
             </button>
-            
+
             <button
               onClick={() => handleDemoLogin('caregiver')}
               className="w-full p-4 bg-[var(--bg-primary)] border-2 border-[var(--border)] rounded-lg hover:border-[var(--button-primary)] transition-colors text-left"
@@ -165,6 +169,7 @@ export const LoginPage: React.FC = () => {
             variant="secondary"
             onClick={() => navigate('/settings')}
             icon={<Settings size={20} />}
+            className="w-full"
           >
             Accessibility Settings
           </Button>

@@ -1,60 +1,51 @@
 import React from 'react';
 import { useTheme } from '../../context/ThemeContext';
-import { ZoomIn, ZoomOut, RotateCcw } from 'lucide-react';
 import { Button } from '../ui/Button';
 
 export const TextSizeControl: React.FC = () => {
   const { textSize, setTextSize } = useTheme();
 
-  const increaseSize = () => {
-    if (textSize < 200) setTextSize(textSize + 10);
-  };
-
-  const decreaseSize = () => {
-    if (textSize > 80) setTextSize(textSize - 10);
-  };
-
-  const resetSize = () => {
-    setTextSize(100);
+  const handleSetSize = (size: number) => {
+    setTextSize(size);
   };
 
   return (
     <div className="space-y-4">
-      <h3 className="font-semibold text-[var(--text-primary)]">Text Size</h3>
-      <div className="flex items-center gap-4 flex-wrap">
+      <div className="grid grid-cols-3 gap-3">
         <Button
-          variant="secondary"
-          onClick={decreaseSize}
-          disabled={textSize <= 80}
-          icon={<ZoomOut size={20} />}
-          aria-label="Decrease text size"
+          variant={textSize === 100 ? 'primary' : 'secondary'}
+          onClick={() => handleSetSize(100)}
+          className="flex flex-col items-center justify-center h-24 py-2"
+          aria-label="Set text size to Normal (100%)"
         >
-          Smaller
+          <span className="text-lg">Aa</span>
+          <span className="text-sm font-normal mt-1">Normal</span>
+          <span className="text-xs opacity-70">100%</span>
         </Button>
-        <div className="flex-1 min-w-[120px] text-center">
-          <div className="text-2xl font-bold text-[var(--text-primary)]">{textSize}%</div>
-          <div className="text-sm text-[var(--text-secondary)]">Current Size</div>
-        </div>
+
         <Button
-          variant="secondary"
-          onClick={increaseSize}
-          disabled={textSize >= 200}
-          icon={<ZoomIn size={20} />}
-          aria-label="Increase text size"
+          variant={textSize === 150 ? 'primary' : 'secondary'}
+          onClick={() => handleSetSize(150)}
+          className="flex flex-col items-center justify-center h-24 py-2"
+          aria-label="Set text size to Medium (150%)"
         >
-          Larger
+          <span className="text-xl">Aa</span>
+          <span className="text-sm font-normal mt-1">Medium</span>
+          <span className="text-xs opacity-70">150%</span>
         </Button>
-        {textSize !== 100 && (
-          <Button
-            variant="secondary"
-            onClick={resetSize}
-            icon={<RotateCcw size={20} />}
-            aria-label="Reset text size"
-          >
-            Reset
-          </Button>
-        )}
+
+        <Button
+          variant={textSize === 200 ? 'primary' : 'secondary'}
+          onClick={() => handleSetSize(200)}
+          className="flex flex-col items-center justify-center h-24 py-2"
+          aria-label="Set text size to Large (200%)"
+        >
+          <span className="text-2xl">Aa</span>
+          <span className="text-sm font-normal mt-1">Large</span>
+          <span className="text-xs opacity-70">200%</span>
+        </Button>
       </div>
+      
       <div className="p-4 bg-[var(--bg-surface)] border-2 border-[var(--border)] rounded-lg">
         <p className="text-[var(--text-primary)]">
           Sample text at current size: The quick brown fox jumps over the lazy dog.
