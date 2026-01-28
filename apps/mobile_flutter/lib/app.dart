@@ -9,7 +9,7 @@ class CareConnectApp extends StatelessWidget {
     return MaterialApp.router(
       title: 'CareConnect',
       debugShowCheckedModeBanner: false,
-      routerConfig: AppRouter.router,
+      routerConfig: buildRouter(),
       theme: ThemeData(
         useMaterial3: true,
       ),

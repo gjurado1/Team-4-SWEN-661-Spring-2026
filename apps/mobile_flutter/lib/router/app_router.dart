@@ -1,73 +1,70 @@
 import 'package:go_router/go_router.dart';
 
-// Auth
-import '../screens/auth/login_screen.dart';
-import '../screens/auth/register_screen.dart';
-import '../screens/auth/forgot_password_screen.dart';
+// Import your screens
+import '../pages/login_page.dart';
+import '../pages/forgot_password_page.dart';
+import '../pages/register_page.dart';
 
-// Patient
-import '../screens/patient/patient_dashboard_screen.dart';
-import '../screens/patient/patient_checkin_screen.dart';
-import '../screens/patient/patient_list_screen.dart';
-import '../screens/patient/symptoms_screen.dart';
+import '../pages/caregiver_dashboard.dart';
+import '../pages/patient_dashboard.dart';
+import '../pages/patient_list_page.dart';
+import '../pages/schedule_page.dart';
+import '../pages/patient_checkin_page.dart';
+import '../pages/symptoms_page.dart';
+import '../pages/medications_page.dart';
+import '../pages/reports_page.dart';
+import '../pages/messages_page.dart';
+import '../pages/settings_page.dart';
+import '../pages/profile_page.dart';
+import '../pages/emergency_page.dart';
 
-// Caregiver
-import '../screens/caregiver/caregiver_dashboard_screen.dart';
-import '../screens/caregiver/messages_screen.dart';
-import '../screens/caregiver/emergency_screen.dart';
+// Your layout (the Flutter version you created)
+import '../widgets/navigation/app_layout.dart';
 
-// Other
-import '../screens/meds/medications_screen.dart';
-import '../screens/schedule/schedule_screen.dart';
-import '../screens/reports/reports_screen.dart';
-import '../screens/profile/profile_screen.dart';
-import '../screens/profile/settings_screen.dart';
+GoRouter buildRouter() {
+  return GoRouter(
+    initialLocation: '/login',
 
-class Routes {
-  static const login = '/login';
-  static const register = '/register';
-  static const forgotPassword = '/forgot-password';
-
-  static const patientDashboard = '/patient/dashboard';
-  static const patientCheckin = '/patient/checkin';
-  static const patientList = '/patient/list';
-  static const symptoms = '/patient/symptoms';
-
-  static const caregiverDashboard = '/caregiver/dashboard';
-  static const messages = '/messages';
-  static const emergency = '/emergency';
-
-  static const medications = '/medications';
-  static const schedule = '/schedule';
-  static const reports = '/reports';
-
-  static const profile = '/profile';
-  static const settings = '/settings';
-}
-
-class AppRouter {
-  static final router = GoRouter(
-    initialLocation: Routes.login,
     routes: [
-      GoRoute(path: Routes.login, builder: (_, __) => const LoginScreen()),
-      GoRoute(path: Routes.register, builder: (_, __) => const RegisterScreen()),
-      GoRoute(path: Routes.forgotPassword, builder: (_, __) => const ForgotPasswordScreen()),
+      // Auth routes (NO BottomNav) — matches routes.ts 
+      GoRoute(path: '/', builder: (context, state) => const LoginPage()),
+      GoRoute(path: '/login', builder: (context, state) => const LoginPage()),
+      GoRoute(path: '/forgot-password', builder: (context, state) => const ForgotPasswordPage()),
+      GoRoute(path: '/register', builder: (context, state) => const RegisterPage()),
 
-      GoRoute(path: Routes.patientDashboard, builder: (_, __) => const PatientDashboardScreen()),
-      GoRoute(path: Routes.patientCheckin, builder: (_, __) => const PatientCheckinScreen()),
-      GoRoute(path: Routes.patientList, builder: (_, __) => const PatientListScreen()),
-      GoRoute(path: Routes.symptoms, builder: (_, __) => const SymptomsScreen()),
+      // App routes (WITH BottomNav) — AppLayout wraps children 
+      ShellRoute(
+        builder: (context, state, child) {
+          // AppLayout expects currentPath + onNavigate + child
+          return AppLayout(
+            currentPath: state.uri.toString(),
+            onNavigate: (path) => context.go(path),
+            child: child,
+          );
+        },
+        routes: [
+          // Caregiver
+          GoRoute(path: '/caregiver/dashboard', builder: (c, s) => const CaregiverDashboard()),
+          GoRoute(path: '/caregiver/patients', builder: (c, s) => const PatientListPage()),
+          GoRoute(path: '/caregiver/schedule', builder: (c, s) => const SchedulePage()),
 
-      GoRoute(path: Routes.caregiverDashboard, builder: (_, __) => const CaregiverDashboardScreen()),
-      GoRoute(path: Routes.messages, builder: (_, __) => const MessagesScreen()),
-      GoRoute(path: Routes.emergency, builder: (_, __) => const EmergencyScreen()),
+          // Patient
+          GoRoute(path: '/patient/dashboard', builder: (c, s) => const PatientDashboard()),
+          GoRoute(path: '/patient/checkin', builder: (c, s) => const PatientCheckInPage()),
+          GoRoute(path: '/patient/symptoms', builder: (c, s) => const SymptomsPage()),
+          GoRoute(path: '/patient/medications', builder: (c, s) => const MedicationsPage()),
+          GoRoute(path: '/patient/reports', builder: (c, s) => const ReportsPage()),
 
-      GoRoute(path: Routes.medications, builder: (_, __) => const MedicationsScreen()),
-      GoRoute(path: Routes.schedule, builder: (_, __) => const ScheduleScreen()),
-      GoRoute(path: Routes.reports, builder: (_, __) => const ReportsScreen()),
-
-      GoRoute(path: Routes.profile, builder: (_, __) => const ProfileScreen()),
-      GoRoute(path: Routes.settings, builder: (_, __) => const SettingsScreen()),
+          // Shared
+          GoRoute(path: '/messages', builder: (c, s) => const MessagesPage()),
+          GoRoute(path: '/settings', builder: (c, s) => const SettingsPage()),
+          GoRoute(path: '/profile', builder: (c, s) => const ProfilePage()),
+          GoRoute(path: '/emergency', builder: (c, s) => const EmergencyPage()),
+        ],
+      ),
     ],
+
+    // Fallback == React path: "*" → LoginPage
+    errorBuilder: (context, state) => const LoginPage(),
   );
 }
