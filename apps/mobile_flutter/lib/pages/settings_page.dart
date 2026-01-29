@@ -164,7 +164,26 @@ class _SettingsPageState extends State<SettingsPage> {
               children: [
                 IconButton(
                   tooltip: 'Back',
-                  onPressed: () => context.pop(),
+                  onPressed: () async {
+                    // 1️⃣ Normal case: go back if there is history
+                    if (Navigator.of(context).canPop()) {
+                      context.pop();
+                      return;
+                    }
+
+                    // 2️⃣ Fallback: determine where to go based on role
+                    final prefs = await SharedPreferences.getInstance();
+                    final role = prefs.getString('careconnect-role');
+
+                    if (role == 'caregiver') {
+                      context.go('/caregiver/dashboard');
+                    } else if (role == 'patient') {
+                      context.go('/patient/dashboard');
+                    } else {
+                      // Not logged in
+                      context.go('/login');
+                    }
+                  },
                   icon: const Icon(Icons.arrow_back),
                 ),
                 const SizedBox(width: 6),

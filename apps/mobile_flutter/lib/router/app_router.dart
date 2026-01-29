@@ -26,34 +26,58 @@ GoRouter buildRouter() {
     initialLocation: '/login',
 
     routes: [
-      // Auth routes (NO BottomNav) — matches routes.ts 
+      // Auth routes (NO BottomNav) — matches routes.ts
       GoRoute(path: '/', builder: (context, state) => const LoginPage()),
       GoRoute(path: '/login', builder: (context, state) => const LoginPage()),
-      GoRoute(path: '/forgot-password', builder: (context, state) => const ForgotPasswordPage()),
-      GoRoute(path: '/register', builder: (context, state) => const RegisterPage()),
+      GoRoute(
+          path: '/forgot-password',
+          builder: (context, state) => const ForgotPasswordPage()),
+      GoRoute(
+          path: '/register', builder: (context, state) => const RegisterPage()),
 
-      // App routes (WITH BottomNav) — AppLayout wraps children 
+      // App routes (WITH BottomNav) — AppLayout wraps children
       ShellRoute(
         builder: (context, state, child) {
           // AppLayout expects currentPath + onNavigate + child
           return AppLayout(
             currentPath: state.uri.toString(),
-            onNavigate: (path) => context.go(path),
+            onNavigate: (path, {bool push = false}) {
+              if (push) {
+                context.push(path);
+              } else {
+                context.go(path);
+              }
+            },
             child: child,
           );
         },
         routes: [
           // Caregiver
-          GoRoute(path: '/caregiver/dashboard', builder: (c, s) => const CaregiverDashboard()),
-          GoRoute(path: '/caregiver/patients', builder: (c, s) => const PatientListPage()),
-          GoRoute(path: '/caregiver/schedule', builder: (c, s) => const SchedulePage()),
+          GoRoute(
+              path: '/caregiver/dashboard',
+              builder: (c, s) => const CaregiverDashboard()),
+          GoRoute(
+              path: '/caregiver/patients',
+              builder: (c, s) => const PatientListPage()),
+          GoRoute(
+              path: '/caregiver/schedule',
+              builder: (c, s) => const SchedulePage()),
 
           // Patient
-          GoRoute(path: '/patient/dashboard', builder: (c, s) => const PatientDashboard()),
-          GoRoute(path: '/patient/checkin', builder: (c, s) => const PatientCheckInPage()),
-          GoRoute(path: '/patient/symptoms', builder: (c, s) => const SymptomsPage()),
-          GoRoute(path: '/patient/medications', builder: (c, s) => const MedicationsPage()),
-          GoRoute(path: '/patient/reports', builder: (c, s) => const ReportsPage()),
+          GoRoute(
+              path: '/patient/dashboard',
+              builder: (c, s) => const PatientDashboard()),
+          GoRoute(
+              path: '/patient/checkin',
+              builder: (c, s) => const PatientCheckInPage()),
+          GoRoute(
+              path: '/patient/symptoms',
+              builder: (c, s) => const SymptomsPage()),
+          GoRoute(
+              path: '/patient/medications',
+              builder: (c, s) => const MedicationsPage()),
+          GoRoute(
+              path: '/patient/reports', builder: (c, s) => const ReportsPage()),
 
           // Shared
           GoRoute(path: '/messages', builder: (c, s) => const MessagesPage()),

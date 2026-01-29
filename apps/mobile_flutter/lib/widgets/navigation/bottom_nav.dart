@@ -5,7 +5,7 @@ enum AppRole { caregiver, patient }
 
 class BottomNav extends StatefulWidget {
   final String currentPath;
-  final ValueChanged<String> onNavigate;
+  final void Function(String path, {bool push}) onNavigate;
 
   const BottomNav({
     super.key,
@@ -44,12 +44,19 @@ class _BottomNavState extends State<BottomNav> {
     if (_role == AppRole.caregiver) {
       return [
         _NavItem(icon: Icons.home, label: 'Home', path: '/caregiver/dashboard'),
-        _NavItem(icon: Icons.assignment, label: 'Patient List', path: '/caregiver/patients'),
-        _NavItem(icon: Icons.bar_chart, label: 'Schedule', path: '/caregiver/schedule'),
+        _NavItem(
+            icon: Icons.assignment,
+            label: 'Patient List',
+            path: '/caregiver/patients'),
+        _NavItem(
+            icon: Icons.bar_chart,
+            label: 'Schedule',
+            path: '/caregiver/schedule'),
         _NavItem(icon: Icons.message, label: 'Messages', path: '/messages'),
         _NavItem(icon: Icons.person, label: 'Profile', path: '/profile'),
         _NavItem(icon: Icons.settings, label: 'Settings', path: '/settings'),
-        _NavItem(icon: Icons.warning_amber, label: 'Emergency', path: '/emergency'),
+        _NavItem(
+            icon: Icons.warning_amber, label: 'Emergency', path: '/emergency'),
         _NavItem(
           icon: Icons.logout,
           label: 'Logout',
@@ -61,11 +68,13 @@ class _BottomNavState extends State<BottomNav> {
 
     return [
       _NavItem(icon: Icons.home, label: 'Home', path: '/patient/dashboard'),
-      _NavItem(icon: Icons.favorite, label: 'Check-In', path: '/patient/checkin'),
+      _NavItem(
+          icon: Icons.favorite, label: 'Check-In', path: '/patient/checkin'),
       _NavItem(icon: Icons.message, label: 'Messages', path: '/messages'),
       _NavItem(icon: Icons.person, label: 'Profile', path: '/profile'),
       _NavItem(icon: Icons.settings, label: 'Settings', path: '/settings'),
-      _NavItem(icon: Icons.warning_amber, label: 'Emergency', path: '/emergency'),
+      _NavItem(
+          icon: Icons.warning_amber, label: 'Emergency', path: '/emergency'),
       _NavItem(
         icon: Icons.logout,
         label: 'Logout',
@@ -77,7 +86,11 @@ class _BottomNavState extends State<BottomNav> {
 
   void _navigate(_NavItem item) async {
     if (item.onTap != null) await item.onTap!.call();
-    widget.onNavigate(item.path);
+
+    const pushRoutes = {'/settings', '/profile', '/messages', '/emergency'};
+    final shouldPush = pushRoutes.contains(item.path);
+
+    widget.onNavigate(item.path, push: shouldPush);
     setState(() => _expanded = false);
   }
 
@@ -104,7 +117,9 @@ class _BottomNavState extends State<BottomNav> {
                       padding: const EdgeInsets.all(16),
                       decoration: BoxDecoration(
                         color: cs.surface,
-                        border: Border(bottom: BorderSide(color: theme.dividerColor, width: 2)),
+                        border: Border(
+                            bottom: BorderSide(
+                                color: theme.dividerColor, width: 2)),
                       ),
                       child: SizedBox(
                         height: 64,
@@ -114,10 +129,12 @@ class _BottomNavState extends State<BottomNav> {
                           icon: const Icon(Icons.expand_more, size: 28),
                           label: const Text(
                             'Collapse Menu',
-                            style: TextStyle(fontSize: 20, fontWeight: FontWeight.w800),
+                            style: TextStyle(
+                                fontSize: 20, fontWeight: FontWeight.w800),
                           ),
                           style: OutlinedButton.styleFrom(
-                            side: BorderSide(color: theme.dividerColor, width: 2),
+                            side:
+                                BorderSide(color: theme.dividerColor, width: 2),
                           ),
                         ),
                       ),
@@ -160,7 +177,8 @@ class _BottomNavState extends State<BottomNav> {
             child: Container(
               padding: EdgeInsets.only(bottom: bottomPad),
               decoration: BoxDecoration(
-                border: Border(top: BorderSide(color: theme.dividerColor, width: 2)),
+                border: Border(
+                    top: BorderSide(color: theme.dividerColor, width: 2)),
               ),
               child: SizedBox(
                 height: 64,
@@ -174,7 +192,8 @@ class _BottomNavState extends State<BottomNav> {
                       const SizedBox(width: 12),
                       Text(
                         'Menu',
-                        style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w800),
+                        style: theme.textTheme.titleLarge
+                            ?.copyWith(fontWeight: FontWeight.w800),
                       ),
                     ],
                   ),
@@ -230,7 +249,8 @@ class _NavGridTile extends StatelessWidget {
           decoration: BoxDecoration(
             color: active ? cs.primary : cs.surface,
             borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: active ? cs.primary : theme.dividerColor, width: 2),
+            border: Border.all(
+                color: active ? cs.primary : theme.dividerColor, width: 2),
           ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -238,10 +258,13 @@ class _NavGridTile extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: active ? Colors.white.withValues(alpha: 0.20) : cs.surfaceContainerHighest,
+                  color: active
+                      ? Colors.white.withValues(alpha: 0.20)
+                      : cs.surfaceContainerHighest,
                   shape: BoxShape.circle,
                 ),
-                child: Icon(item.icon, size: 40, color: active ? Colors.white : cs.primary),
+                child: Icon(item.icon,
+                    size: 40, color: active ? Colors.white : cs.primary),
               ),
               const SizedBox(height: 12),
               Text(
