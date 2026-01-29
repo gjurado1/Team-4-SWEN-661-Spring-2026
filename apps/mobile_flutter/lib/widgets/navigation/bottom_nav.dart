@@ -21,6 +21,11 @@ class _BottomNavState extends State<BottomNav> {
   bool _expanded = false;
   AppRole _role = AppRole.caregiver;
 
+  String _keyFromLabel(String label) {
+  // "Patient List" -> "patient_list"
+  return label.toLowerCase().replaceAll(' ', '_');
+}
+
   @override
   void initState() {
     super.initState();
@@ -43,13 +48,13 @@ class _BottomNavState extends State<BottomNav> {
   List<_NavItem> get _items {
     if (_role == AppRole.caregiver) {
       return [
-        _NavItem(icon: Icons.home, label: 'Home', path: '/caregiver/dashboard'),
-        _NavItem(icon: Icons.assignment, label: 'Patient List', path: '/caregiver/patients'),
-        _NavItem(icon: Icons.bar_chart, label: 'Schedule', path: '/caregiver/schedule'),
-        _NavItem(icon: Icons.message, label: 'Messages', path: '/messages'),
-        _NavItem(icon: Icons.person, label: 'Profile', path: '/profile'),
-        _NavItem(icon: Icons.settings, label: 'Settings', path: '/settings'),
-        _NavItem(icon: Icons.warning_amber, label: 'Emergency', path: '/emergency'),
+        const _NavItem(icon: Icons.home, label: 'Home', path: '/caregiver/dashboard'),
+        const _NavItem(icon: Icons.assignment, label: 'Patient List', path: '/caregiver/patients'),
+        const _NavItem(icon: Icons.bar_chart, label: 'Schedule', path: '/caregiver/schedule'),
+        const _NavItem(icon: Icons.message, label: 'Messages', path: '/messages'),
+        const _NavItem(icon: Icons.person, label: 'Profile', path: '/profile'),
+        const _NavItem(icon: Icons.settings, label: 'Settings', path: '/settings'),
+        const _NavItem(icon: Icons.warning_amber, label: 'Emergency', path: '/emergency'),
         _NavItem(
           icon: Icons.logout,
           label: 'Logout',
@@ -60,12 +65,12 @@ class _BottomNavState extends State<BottomNav> {
     }
 
     return [
-      _NavItem(icon: Icons.home, label: 'Home', path: '/patient/dashboard'),
-      _NavItem(icon: Icons.favorite, label: 'Check-In', path: '/patient/checkin'),
-      _NavItem(icon: Icons.message, label: 'Messages', path: '/messages'),
-      _NavItem(icon: Icons.person, label: 'Profile', path: '/profile'),
-      _NavItem(icon: Icons.settings, label: 'Settings', path: '/settings'),
-      _NavItem(icon: Icons.warning_amber, label: 'Emergency', path: '/emergency'),
+      const _NavItem(icon: Icons.home, label: 'Home', path: '/patient/dashboard'),
+      const _NavItem(icon: Icons.favorite, label: 'Check-In', path: '/patient/checkin'),
+      const _NavItem(icon: Icons.message, label: 'Messages', path: '/messages'),
+      const _NavItem(icon: Icons.person, label: 'Profile', path: '/profile'),
+      const _NavItem(icon: Icons.settings, label: 'Settings', path: '/settings'),
+      const _NavItem(icon: Icons.warning_amber, label: 'Emergency', path: '/emergency'),
       _NavItem(
         icon: Icons.logout,
         label: 'Logout',
@@ -223,6 +228,7 @@ class _NavGridTile extends StatelessWidget {
       selected: active,
       label: item.label,
       child: InkWell(
+        key: ValueKey('nav_${item.label.toLowerCase().replaceAll(' ', '_')}'),
         onTap: onTap,
         borderRadius: BorderRadius.circular(12),
         child: Container(
