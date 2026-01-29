@@ -13,7 +13,6 @@ class EmergencyPage extends StatefulWidget {
 }
 
 class _EmergencyPageState extends State<EmergencyPage> {
-  bool _confirmOpen = false;
   bool _emergencyActivated = false;
 
   final _contacts = const [
@@ -23,16 +22,22 @@ class _EmergencyPageState extends State<EmergencyPage> {
     _EmergencyContact(name: 'Family Member - Robert Doe', number: '(555) 456-7890', type: 'Family'),
   ];
 
-  void _handleSOS() {
+  void _handleSOS() async {
     if (_emergencyActivated) return;
-    setState(() => _confirmOpen = true);
+
+    final confirmed = await showDialog<bool>(
+      context: context,
+      barrierDismissible: false,
+      builder: (_) => const _EmergencyConfirmDialog(),
+    );
+
+    if (confirmed == true) {
+      _confirmSOS();
+    }
   }
 
   void _confirmSOS() {
-    setState(() {
-      _emergencyActivated = true;
-      _confirmOpen = false;
-    });
+    setState(() => _emergencyActivated = true);
 
     // In a real app: trigger protocols, notifications, SMS/calls, etc.
     ScaffoldMessenger.of(context).showSnackBar(
@@ -66,7 +71,14 @@ class _EmergencyPageState extends State<EmergencyPage> {
               children: [
                 IconButton(
                   tooltip: 'Back',
-                  onPressed: () => context.pop(),
+                  onPressed: () {
+                    // prevents "There is nothing to pop"
+                    if (Navigator.of(context).canPop()) {
+                      Navigator.of(context).pop();
+                    } else {
+                      context.go('/login');
+                    }
+                  },
                   icon: const Icon(Icons.arrow_back, color: Colors.white),
                 ),
                 const SizedBox(width: 6),
@@ -195,7 +207,10 @@ class _EmergencyPageState extends State<EmergencyPage> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text('Location Services', style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w800)),
+                              Text(
+                                'Location Services',
+                                style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w800),
+                              ),
                               const SizedBox(height: 6),
                               Text(
                                 '📍 Your location will be shared with emergency contacts when SOS is activated',
@@ -219,7 +234,10 @@ class _EmergencyPageState extends State<EmergencyPage> {
                   const SizedBox(height: 18),
 
                   // Emergency contacts list
-                  Text('Emergency Contacts', style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w900)),
+                  Text(
+                    'Emergency Contacts',
+                    style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w900),
+                  ),
                   const SizedBox(height: 12),
 
                   for (final c in _contacts) ...[
@@ -246,7 +264,10 @@ class _EmergencyPageState extends State<EmergencyPage> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(c.name, style: theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w900)),
+                                Text(
+                                  c.name,
+                                  style: theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w900),
+                                ),
                                 const SizedBox(height: 2),
                                 Text(c.type, style: theme.textTheme.bodySmall?.copyWith(color: theme.hintColor)),
                                 const SizedBox(height: 6),
@@ -293,15 +314,30 @@ class _EmergencyPageState extends State<EmergencyPage> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text('Safety Information', style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w900)),
+                          Text(
+                            'Safety Information',
+                            style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w900),
+                          ),
                           const SizedBox(height: 10),
-                          Text('• Pressing SOS will immediately notify all emergency contacts', style: theme.textTheme.bodySmall?.copyWith(color: theme.hintColor)),
+                          Text(
+                            '• Pressing SOS will immediately notify all emergency contacts',
+                            style: theme.textTheme.bodySmall?.copyWith(color: theme.hintColor),
+                          ),
                           const SizedBox(height: 6),
-                          Text('• Your location will be shared automatically', style: theme.textTheme.bodySmall?.copyWith(color: theme.hintColor)),
+                          Text(
+                            '• Your location will be shared automatically',
+                            style: theme.textTheme.bodySmall?.copyWith(color: theme.hintColor),
+                          ),
                           const SizedBox(height: 6),
-                          Text('• Emergency services can be contacted directly from this screen', style: theme.textTheme.bodySmall?.copyWith(color: theme.hintColor)),
+                          Text(
+                            '• Emergency services can be contacted directly from this screen',
+                            style: theme.textTheme.bodySmall?.copyWith(color: theme.hintColor),
+                          ),
                           const SizedBox(height: 6),
-                          Text('• Your caregiver will receive a priority alert', style: theme.textTheme.bodySmall?.copyWith(color: theme.hintColor)),
+                          Text(
+                            '• Your caregiver will receive a priority alert',
+                            style: theme.textTheme.bodySmall?.copyWith(color: theme.hintColor),
+                          ),
                         ],
                       ),
                     ),
@@ -312,14 +348,6 @@ class _EmergencyPageState extends State<EmergencyPage> {
           ),
         ],
       ),
-
-      // Confirmation modal
-      bottomSheet: _confirmOpen
-          ? _ConfirmEmergencySheet(
-              onCancel: () => setState(() => _confirmOpen = false),
-              onConfirm: _confirmSOS,
-            )
-          : null,
     );
   }
 }
@@ -336,127 +364,136 @@ class _EmergencyContact {
   });
 }
 
-class _ConfirmEmergencySheet extends StatelessWidget {
-  final VoidCallback onCancel;
-  final VoidCallback onConfirm;
-
-  const _ConfirmEmergencySheet({
-    required this.onCancel,
-    required this.onConfirm,
-  });
+/// Centered dialog that matches your React web modal
+class _EmergencyConfirmDialog extends StatelessWidget {
+  const _EmergencyConfirmDialog();
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final cs = theme.colorScheme;
-    final bottomPad = MediaQuery.of(context).padding.bottom;
 
-    return Material(
-      color: Colors.black.withValues(alpha: 0.40),
-      child: SafeArea(
-        top: false,
-        child: Align(
-          alignment: Alignment.bottomCenter,
-          child: Container(
-            width: double.infinity,
-            padding: EdgeInsets.fromLTRB(16, 12, 16, bottomPad + 16),
-            decoration: BoxDecoration(
-              color: cs.surface,
-              borderRadius: const BorderRadius.only(topLeft: Radius.circular(16), topRight: Radius.circular(16)),
-              border: Border(top: BorderSide(color: theme.dividerColor, width: 2)),
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Container(
-                  height: 6,
-                  width: 72,
-                  decoration: BoxDecoration(color: theme.dividerColor, borderRadius: BorderRadius.circular(999)),
-                ),
-                const SizedBox(height: 12),
-
-                Row(
-                  children: [
-                    Expanded(
-                      child: Text(
-                        'Activate Emergency SOS?',
-                        style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w900),
-                      ),
+    return Dialog(
+      insetPadding: const EdgeInsets.symmetric(horizontal: 20),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 560),
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(20, 16, 20, 16),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Header row
+              Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      'Activate Emergency SOS?',
+                      style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w900),
                     ),
-                    IconButton(onPressed: onCancel, icon: const Icon(Icons.close)),
-                  ],
-                ),
-                const SizedBox(height: 10),
+                  ),
+                  IconButton(
+                    tooltip: 'Close',
+                    onPressed: () => Navigator.of(context).pop(false),
+                    icon: const Icon(Icons.close),
+                  ),
+                ],
+              ),
 
-                Container(
-                  padding: const EdgeInsets.all(14),
-                  decoration: BoxDecoration(
-                    color: cs.error.withValues(alpha: 0.10),
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: cs.error.withValues(alpha: 0.35), width: 2),
-                  ),
-                  child: Column(
-                    children: [
-                      Icon(Icons.warning_amber_rounded, size: 48, color: cs.error),
-                      const SizedBox(height: 10),
-                      Text(
-                        'This will immediately alert all your emergency contacts and caregivers.',
-                        style: theme.textTheme.bodyMedium?.copyWith(
-                          fontWeight: FontWeight.w700,
-                          color: cs.error,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ],
-                  ),
-                ),
+              const SizedBox(height: 12),
 
-                const SizedBox(height: 12),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    'The following actions will be taken:',
-                    style: theme.textTheme.bodyMedium?.copyWith(color: theme.hintColor),
-                  ),
+              // Warning box
+              Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFFDECEA),
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: const Color(0xFFB42318), width: 2),
                 ),
-                const SizedBox(height: 8),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    '✓ Notify all emergency contacts via SMS and phone call\n'
-                    '✓ Share your current location\n'
-                    '✓ Alert your primary caregiver\n'
-                    '✓ Log emergency event in your health records',
-                    style: theme.textTheme.bodySmall?.copyWith(color: theme.hintColor, height: 1.6),
-                  ),
-                ),
-
-                const SizedBox(height: 16),
-                Row(
+                child: Row(
                   children: [
-                    Expanded(
-                      child: AppButton(
-                        variant: AppButtonVariant.secondary,
-                        onPressed: onCancel,
-                        expand: true,
-                        child: const Text('Cancel'),
-                      ),
-                    ),
+                    const Icon(Icons.warning_amber_rounded, color: Color(0xFFB42318), size: 28),
                     const SizedBox(width: 12),
                     Expanded(
-                      child: AppButton(
-                        variant: AppButtonVariant.destructive,
-                        onPressed: onConfirm,
-                        expand: true,
-                        child: const Text('Confirm Emergency'),
+                      child: Text(
+                        'This will immediately alert all your emergency contacts and caregivers.',
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          color: const Color(0xFFB42318),
+                          fontWeight: FontWeight.w700,
+                        ),
                       ),
                     ),
                   ],
                 ),
-              ],
-            ),
+              ),
+
+              const SizedBox(height: 14),
+
+              Text(
+                'The following actions will be taken:',
+                style: theme.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w700),
+              ),
+              const SizedBox(height: 8),
+
+              const _Bullet('Notify all emergency contacts via SMS and phone call'),
+              const _Bullet('Share your current location'),
+              const _Bullet('Alert your primary caregiver'),
+              const _Bullet('Log emergency event in your health records'),
+
+              const SizedBox(height: 18),
+
+              // Buttons
+              Row(
+                children: [
+                  Expanded(
+                    child: AppButton(
+                      variant: AppButtonVariant.secondary,
+                      expand: true,
+                      onPressed: () => Navigator.of(context).pop(false),
+                      child: const Text('Cancel'),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: AppButton(
+                      variant: AppButtonVariant.destructive,
+                      expand: true,
+                      onPressed: () => Navigator.of(context).pop(true),
+                      child: const Text('Confirm Emergency'),
+                    ),
+                  ),
+                ],
+              ),
+            ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+class _Bullet extends StatelessWidget {
+  final String text;
+  const _Bullet(this.text);
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text('✓  ', style: TextStyle(fontWeight: FontWeight.w900)),
+          Expanded(
+            child: Text(
+              text,
+              style: theme.textTheme.bodySmall?.copyWith(color: theme.hintColor, height: 1.4),
+            ),
+          ),
+        ],
       ),
     );
   }
