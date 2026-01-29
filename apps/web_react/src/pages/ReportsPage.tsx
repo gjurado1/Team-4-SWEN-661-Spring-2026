@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router';
 import { Card } from '../components/ui/Card';
-import { BottomNav } from '../components/navigation/BottomNav';
+import { HeaderVoiceButton } from '../components/navigation/HeaderVoiceButton';
 import { ArrowLeft, BarChart3, TrendingUp, Calendar } from 'lucide-react';
 
 export const ReportsPage: React.FC = () => {
@@ -31,21 +31,30 @@ export const ReportsPage: React.FC = () => {
       }}
     >
       {/* Header */}
-      <header className="bg-[var(--bg-surface)] border-b-2 border-[var(--border)] py-4 sticky top-0 z-40" style={{
-        marginTop: 'calc(-1 * max(env(safe-area-inset-top, 0px), 24px))',
-        paddingTop: 'calc(max(env(safe-area-inset-top, 0px), 24px) + 16px + 1rem)',
-        paddingLeft: 'calc(20px + env(safe-area-inset-left))',
-        paddingRight: 'calc(20px + env(safe-area-inset-right))'
-      }}>
-        <div className="flex items-center gap-3">
-          <button
-            onClick={() => navigate('/patient/dashboard')}
-            className="p-2 hover:bg-[var(--bg-primary)] rounded-lg transition-colors"
-            aria-label="Back"
-          >
-            <ArrowLeft size={24} />
-          </button>
-          <h1>Reports</h1>
+      <header
+        className="bg-[var(--bg-surface)] border-b-2 border-[var(--border)] py-4 sticky top-0 z-40"
+        style={{
+          marginTop: 'calc(-1 * max(env(safe-area-inset-top, 0px), 24px))',
+          paddingTop: 'calc(max(env(safe-area-inset-top, 0px), 24px) + 16px + 1rem)',
+          paddingLeft: 'calc(20px + env(safe-area-inset-left))',
+          paddingRight: 'calc(20px + env(safe-area-inset-right))'
+        }}
+      >
+        <div className="flex items-center justify-between">
+          {/* Left side: Back + Title */}
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => navigate('/patient/dashboard')}
+              className="p-2 hover:bg-[var(--bg-primary)] rounded-lg transition-colors"
+              aria-label="Back"
+            >
+              <ArrowLeft size={24} />
+            </button>
+            <h1>Reports</h1>
+          </div>
+
+          {/* ✅ Right side: Voice button */}
+          <HeaderVoiceButton />
         </div>
       </header>
 
@@ -101,8 +110,6 @@ export const ReportsPage: React.FC = () => {
           </div>
         </div>
       </div>
-
-      <BottomNav variant="patient" />
     </div>
   );
 };

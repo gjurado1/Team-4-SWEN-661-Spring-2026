@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router';
 import { Card } from '../components/ui/Card';
-import { BottomNav } from '../components/navigation/BottomNav';
 import { Button } from '../components/ui/Button';
-import { ArrowLeft, Activity, Plus } from 'lucide-react';
+import { HeaderVoiceButton } from '../components/navigation/HeaderVoiceButton';
+import { ArrowLeft } from 'lucide-react';
 
 interface Symptom {
   id: number;
@@ -26,7 +26,7 @@ export const SymptomsPage: React.FC = () => {
   ]);
 
   const toggleSymptom = (id: number) => {
-    setSymptoms(symptoms.map(s => 
+    setSymptoms(symptoms.map(s =>
       s.id === id ? { ...s, selected: !s.selected } : s
     ));
   };
@@ -39,7 +39,7 @@ export const SymptomsPage: React.FC = () => {
   const severityLabels = ['None', 'Mild', 'Moderate', 'Severe', 'Very Severe'];
 
   return (
-    <div 
+    <div
       className="min-h-screen bg-[var(--bg-primary)] relative"
       style={{
         paddingTop: 'max(env(safe-area-inset-top, 0px), 24px)',
@@ -49,21 +49,29 @@ export const SymptomsPage: React.FC = () => {
       }}
     >
       {/* Header */}
-      <header className="bg-[var(--bg-surface)] border-b-2 border-[var(--border)] py-4 sticky top-0 z-40" style={{
-        marginTop: 'calc(-1 * max(env(safe-area-inset-top, 0px), 24px))',
-        paddingTop: 'calc(max(env(safe-area-inset-top, 0px), 24px) + 16px + 1rem)',
-        paddingLeft: 'calc(20px + env(safe-area-inset-left))',
-        paddingRight: 'calc(20px + env(safe-area-inset-right))'
-      }}>
-        <div className="flex items-center gap-3">
-          <button
-            onClick={() => navigate('/patient/dashboard')}
-            className="p-2 hover:bg-[var(--bg-primary)] rounded-lg transition-colors"
-            aria-label="Back"
-          >
-            <ArrowLeft size={24} />
-          </button>
-          <h1>Symptoms</h1>
+      <header
+        className="bg-[var(--bg-surface)] border-b-2 border-[var(--border)] py-4 sticky top-0 z-40"
+        style={{
+          marginTop: 'calc(-1 * max(env(safe-area-inset-top, 0px), 24px))',
+          paddingTop: 'calc(max(env(safe-area-inset-top, 0px), 24px) + 16px + 1rem)',
+          paddingLeft: 'calc(20px + env(safe-area-inset-left))',
+          paddingRight: 'calc(20px + env(safe-area-inset-right))'
+        }}
+      >
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => navigate('/patient/dashboard')}
+              className="p-2 hover:bg-[var(--bg-primary)] rounded-lg transition-colors"
+              aria-label="Back"
+            >
+              <ArrowLeft size={24} />
+            </button>
+            <h1>Symptoms</h1>
+          </div>
+
+          {/* ✅ Voice button + bottom sheet actions */}
+          <HeaderVoiceButton />
         </div>
       </header>
 
@@ -105,13 +113,11 @@ export const SymptomsPage: React.FC = () => {
                 value={severity}
                 onChange={(e) => setSeverity(parseInt(e.target.value))}
                 className="w-full h-3 rounded-lg appearance-none cursor-pointer bg-[var(--border)]"
-                style={{
-                  accentColor: 'var(--button-primary)'
-                }}
+                style={{ accentColor: 'var(--button-primary)' }}
               />
               <div className="flex justify-between text-sm text-[var(--text-secondary)]">
                 {severityLabels.map((label, idx) => (
-                  <span 
+                  <span
                     key={idx}
                     className={idx === severity ? 'font-bold text-[var(--button-primary)]' : ''}
                   >
@@ -137,17 +143,11 @@ export const SymptomsPage: React.FC = () => {
             />
           </Card>
 
-          <Button
-            type="submit"
-            variant="primary"
-            className="w-full"
-          >
+          <Button type="submit" variant="primary" className="w-full">
             Submit Log
           </Button>
         </form>
       </div>
-
-      <BottomNav variant="patient" />
     </div>
   );
 };

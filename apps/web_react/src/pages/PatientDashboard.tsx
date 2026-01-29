@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router';
 import { Card } from '../components/ui/Card';
 import { Alert } from '../components/ui/Alert';
-import { BottomNav } from '../components/navigation/BottomNav';
 import { Button } from '../components/ui/Button';
+import { HeaderVoiceButton } from '../components/navigation/HeaderVoiceButton';
 import { WifiOff, Heart, Clock, Activity } from 'lucide-react';
 
 export const PatientDashboard: React.FC = () => {
@@ -25,7 +25,7 @@ export const PatientDashboard: React.FC = () => {
   ];
 
   return (
-    <div 
+    <div
       className="min-h-screen bg-[var(--bg-primary)] relative"
       style={{
         paddingTop: 'max(env(safe-area-inset-top, 0px), 24px)',
@@ -35,13 +35,15 @@ export const PatientDashboard: React.FC = () => {
       }}
     >
       {/* Header */}
-      <header className="bg-[var(--bg-surface)] border-b-2 border-[var(--border)] py-4 sticky top-0 z-40" 
-        style={{ 
+      <header
+        className="bg-[var(--bg-surface)] border-b-2 border-[var(--border)] py-4 sticky top-0 z-40"
+        style={{
           marginTop: 'calc(-1 * max(env(safe-area-inset-top, 0px), 24px))',
           paddingTop: 'calc(max(env(safe-area-inset-top, 0px), 24px) + 16px + 1rem)',
           paddingLeft: 'calc(20px + env(safe-area-inset-left))',
           paddingRight: 'calc(20px + env(safe-area-inset-right))'
-        }}>
+        }}
+      >
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="w-12 h-12 bg-[var(--button-primary)] rounded-full flex items-center justify-center text-white font-bold text-xl">
@@ -52,22 +54,30 @@ export const PatientDashboard: React.FC = () => {
               <p className="text-sm text-[var(--text-secondary)]">How are you feeling today?</p>
             </div>
           </div>
+
+          {/* ✅ Voice button + actions */}
+          <HeaderVoiceButton />
         </div>
       </header>
 
-      <div className="space-y-6" style={{
-        paddingTop: '20px',
-        paddingLeft: 'calc(20px + env(safe-area-inset-left))',
-        paddingRight: 'calc(20px + env(safe-area-inset-right))',
-        paddingBottom: '20px'
-      }}>
+      <div
+        className="space-y-6"
+        style={{
+          paddingTop: '20px',
+          paddingLeft: 'calc(20px + env(safe-area-inset-left))',
+          paddingRight: 'calc(20px + env(safe-area-inset-right))',
+          paddingBottom: '20px'
+        }}
+      >
         {/* Offline Alert */}
         <Alert type="info">
           <div className="flex items-start gap-2">
             <WifiOff size={20} className="flex-shrink-0 mt-0.5" />
             <div>
               <strong>Offline Mode</strong>
-              <p className="text-sm mt-1">Last synced 2 hours ago. Your data will sync when reconnected.</p>
+              <p className="text-sm mt-1">
+                Last synced 2 hours ago. Your data will sync when reconnected.
+              </p>
             </div>
           </div>
         </Alert>
@@ -157,7 +167,7 @@ export const PatientDashboard: React.FC = () => {
         </div>
       </div>
 
-      <BottomNav variant="patient" />
+      {/* BottomNav comes from AppLayout */}
     </div>
   );
 };

@@ -1,75 +1,71 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
 
-enum AlertType { error, warning, info }
+enum AppAlertVariant { info, warning, error }
 
 class AppAlert extends StatelessWidget {
-  final AlertType type;
+  final AppAlertVariant variant;
   final Widget child;
-  final VoidCallback? onClose;
 
   const AppAlert({
     super.key,
-    required this.type,
+    required this.variant,
     required this.child,
-    this.onClose,
   });
+
+  const AppAlert.info({super.key, required this.child}) : variant = AppAlertVariant.info;
+  const AppAlert.warning({super.key, required this.child}) : variant = AppAlertVariant.warning;
+  const AppAlert.error({super.key, required this.child}) : variant = AppAlertVariant.error;
 
   @override
   Widget build(BuildContext context) {
-    Color backgroundColor;
-    Color borderColor;
-    IconData icon;
-    Color iconColor;
+    final theme = Theme.of(context);
+    final cs = theme.colorScheme;
 
-    switch (type) {
-      case AlertType.error:
-        backgroundColor = const Color(0xFFFED7D7); // --alert-error-bg
-        borderColor = const Color(0xFFFC8181); // --alert-error-border
-        icon = Icons.warning_amber_rounded;
-        iconColor = const Color(0xFFC53030); // --status-error
-        break;
-      case AlertType.warning:
-        backgroundColor = const Color(0xFFFEF5E7); // --alert-warning-bg
-        borderColor = const Color(0xFFF6C343); // --alert-warning-border
-        icon = Icons.warning_amber_rounded;
-        iconColor = const Color(0xFFD69E2E); // --status-warning
-        break;
-      case AlertType.info:
-        backgroundColor = const Color(0xFFE6F2FF); // --alert-info-bg
-        borderColor = const Color(0xFF90C9FF); // --alert-info-border
+    Color border;
+    Color bg;
+    Color fg;
+    IconData icon;
+
+    switch (variant) {
+      case AppAlertVariant.info:
+        border = cs.primary.withValues(alpha: 0.35);
+        bg = cs.primary.withValues(alpha: 0.10);
+        fg = cs.primary;
         icon = Icons.info_outline;
-        iconColor = const Color(0xFF4C6FBC); // --button-primary
+        break;
+      case AppAlertVariant.warning:
+        border = const Color(0xFFF6C343);
+        bg = const Color(0xFFFEF5E7);
+        fg = const Color(0xFFD69E2E);
+        icon = Icons.warning_amber_outlined;
+        break;
+      case AppAlertVariant.error:
+        border = const Color(0xFFFC8181);
+        bg = const Color(0xFFFED7D7);
+        fg = cs.error;
+        icon = Icons.error_outline;
         break;
     }
 
-    return Semantics(
-      role: SemanticsRole.alert,
-      child: Container(
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: backgroundColor,
-          border: Border.all(color: borderColor, width: 2),
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Icon(icon, color: iconColor, size: 24),
-            const SizedBox(width: 12),
-
-            Expanded(child: child),
-
-            if (onClose != null) ...[
-              const SizedBox(width: 8),
-              IconButton(
-                icon: const Icon(Icons.close, size: 20),
-                onPressed: onClose,
-                tooltip: "Dismiss alert",
-              ),
-            ],
-          ],
-        ),
+    return Container(
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: bg,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: border, width: 2),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Icon(icon, color: fg, size: 20),
+          const SizedBox(width: 10),
+          Expanded(
+            child: DefaultTextStyle.merge(
+              style: theme.textTheme.bodyMedium?.copyWith(color: fg, fontWeight: FontWeight.w600),
+              child: child,
+            ),
+          ),
+        ],
       ),
     );
   }

@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router';
 import { Card } from '../components/ui/Card';
-import { BottomNav } from '../components/navigation/BottomNav';
 import { Button } from '../components/ui/Button';
+import { HeaderVoiceButton } from '../components/navigation/HeaderVoiceButton';
 import { ArrowLeft, Calendar as CalendarIcon, Plus } from 'lucide-react';
 
 export const SchedulePage: React.FC = () => {
@@ -16,7 +16,7 @@ export const SchedulePage: React.FC = () => {
   };
 
   return (
-    <div 
+    <div
       className="min-h-screen bg-[var(--bg-primary)] relative"
       style={{
         paddingTop: 'max(env(safe-area-inset-top, 0px), 24px)',
@@ -26,30 +26,41 @@ export const SchedulePage: React.FC = () => {
       }}
     >
       {/* Header */}
-      <header className="bg-[var(--bg-surface)] border-b-2 border-[var(--border)] py-4 sticky top-0 z-40" style={{
-        marginTop: 'calc(-1 * max(env(safe-area-inset-top, 0px), 24px))',
-        paddingTop: 'calc(max(env(safe-area-inset-top, 0px), 24px) + 16px + 1rem)',
-        paddingLeft: 'calc(20px + env(safe-area-inset-left))',
-        paddingRight: 'calc(20px + env(safe-area-inset-right))'
-      }}>
-        <div className="flex items-center gap-3">
-          <button
-            onClick={() => navigate('/caregiver/dashboard')}
-            className="p-2 hover:bg-[var(--bg-primary)] rounded-lg transition-colors"
-            aria-label="Back"
-          >
-            <ArrowLeft size={24} />
-          </button>
-          <h1>Schedule</h1>
+      <header
+        className="bg-[var(--bg-surface)] border-b-2 border-[var(--border)] py-4 sticky top-0 z-40"
+        style={{
+          marginTop: 'calc(-1 * max(env(safe-area-inset-top, 0px), 24px))',
+          paddingTop: 'calc(max(env(safe-area-inset-top, 0px), 24px) + 16px + 1rem)',
+          paddingLeft: 'calc(20px + env(safe-area-inset-left))',
+          paddingRight: 'calc(20px + env(safe-area-inset-right))'
+        }}
+      >
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => navigate('/caregiver/dashboard')}
+              className="p-2 hover:bg-[var(--bg-primary)] rounded-lg transition-colors"
+              aria-label="Back"
+            >
+              <ArrowLeft size={24} />
+            </button>
+            <h1>Schedule</h1>
+          </div>
+
+          {/* ✅ Voice button + actions */}
+          <HeaderVoiceButton />
         </div>
       </header>
 
-      <div className="space-y-6" style={{
-        paddingTop: '20px',
-        paddingLeft: 'calc(20px + env(safe-area-inset-left))',
-        paddingRight: 'calc(20px + env(safe-area-inset-right))',
-        paddingBottom: '20px'
-      }}>
+      <div
+        className="space-y-6"
+        style={{
+          paddingTop: '20px',
+          paddingLeft: 'calc(20px + env(safe-area-inset-left))',
+          paddingRight: 'calc(20px + env(safe-area-inset-right))',
+          paddingBottom: '20px'
+        }}
+      >
         {/* Today's Schedule Section */}
         <div>
           <div className="flex items-center gap-2 mb-4">
@@ -100,7 +111,9 @@ export const SchedulePage: React.FC = () => {
             </p>
             <Button
               variant="primary"
-              onClick={() => {/* Add appointment logic */}}
+              onClick={() => {
+                /* Add appointment logic */
+              }}
               icon={<Plus size={20} />}
             >
               Schedule Appointment
@@ -113,14 +126,18 @@ export const SchedulePage: React.FC = () => {
           <h3 className="mb-4">Quick Actions</h3>
           <div className="grid grid-cols-2 gap-3">
             <button
-              onClick={() => {/* View calendar */}}
+              onClick={() => {
+                /* View calendar */
+              }}
               className="p-6 bg-[var(--bg-surface)] border-2 border-[var(--border)] rounded-lg hover:border-[var(--button-primary)] transition-colors"
             >
               <CalendarIcon size={32} className="mx-auto mb-2 text-[var(--button-primary)]" />
               <div className="font-medium">View Calendar</div>
             </button>
             <button
-              onClick={() => {/* Add appointment */}}
+              onClick={() => {
+                /* Add appointment */
+              }}
               className="p-6 bg-[var(--bg-surface)] border-2 border-[var(--border)] rounded-lg hover:border-[var(--button-primary)] transition-colors"
             >
               <Plus size={32} className="mx-auto mb-2 text-[var(--button-primary)]" />
@@ -129,8 +146,6 @@ export const SchedulePage: React.FC = () => {
           </div>
         </div>
       </div>
-
-      <BottomNav variant="caregiver" />
     </div>
   );
 };

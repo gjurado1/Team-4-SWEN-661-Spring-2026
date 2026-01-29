@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router';
 import { Card } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
 import { Modal } from '../components/ui/Modal';
-import { BottomNav } from '../components/navigation/BottomNav';
+import { HeaderVoiceButton } from '../components/navigation/HeaderVoiceButton';
 import { ArrowLeft, Phone, MapPin, AlertTriangle, User } from 'lucide-react';
 
 export const EmergencyPage: React.FC = () => {
@@ -29,7 +29,7 @@ export const EmergencyPage: React.FC = () => {
   };
 
   return (
-    <div 
+    <div
       className="min-h-screen bg-[var(--bg-primary)] relative"
       style={{
         paddingTop: 'max(env(safe-area-inset-top, 0px), 24px)',
@@ -39,33 +39,45 @@ export const EmergencyPage: React.FC = () => {
       }}
     >
       {/* Header */}
-      <header className="bg-[var(--status-error)] text-white border-b-2 border-[var(--status-error)] py-4 sticky top-0 z-40" style={{
-        marginTop: 'calc(-1 * max(env(safe-area-inset-top, 0px), 24px))',
-        paddingTop: 'calc(max(env(safe-area-inset-top, 0px), 24px) + 16px + 1rem)',
-        paddingLeft: 'calc(20px + env(safe-area-inset-left))',
-        paddingRight: 'calc(20px + env(safe-area-inset-right))'
-      }}>
-        <div className="flex items-center gap-3">
-          <button
-            onClick={() => navigate(-1)}
-            className="p-2 hover:bg-white/10 rounded-lg transition-colors text-white"
-            aria-label="Back"
-          >
-            <ArrowLeft size={24} />
-          </button>
-          <div className="flex items-center gap-2">
-            <AlertTriangle size={28} />
-            <h1 className="text-white">Emergency</h1>
+      <header
+        className="bg-[var(--status-error)] text-white border-b-2 border-[var(--status-error)] py-4 sticky top-0 z-40"
+        style={{
+          marginTop: 'calc(-1 * max(env(safe-area-inset-top, 0px), 24px))',
+          paddingTop: 'calc(max(env(safe-area-inset-top, 0px), 24px) + 16px + 1rem)',
+          paddingLeft: 'calc(20px + env(safe-area-inset-left))',
+          paddingRight: 'calc(20px + env(safe-area-inset-right))'
+        }}
+      >
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => navigate(-1)}
+              className="p-2 hover:bg-white/10 rounded-lg transition-colors text-white"
+              aria-label="Back"
+            >
+              <ArrowLeft size={24} />
+            </button>
+
+            <div className="flex items-center gap-2">
+              <AlertTriangle size={28} />
+              <h1 className="text-white">Emergency</h1>
+            </div>
           </div>
+
+          {/* Voice button (NEW) */}
+          <HeaderVoiceButton variant="inverted"/>
         </div>
       </header>
 
-      <div className="space-y-6" style={{
-        paddingTop: '20px',
-        paddingLeft: 'calc(20px + env(safe-area-inset-left))',
-        paddingRight: 'calc(20px + env(safe-area-inset-right))',
-        paddingBottom: '20px'
-      }}>
+      <div
+        className="space-y-6"
+        style={{
+          paddingTop: '20px',
+          paddingLeft: 'calc(20px + env(safe-area-inset-left))',
+          paddingRight: 'calc(20px + env(safe-area-inset-right))',
+          paddingBottom: '20px'
+        }}
+      >
         {/* Emergency Activated Banner */}
         {emergencyActivated && (
           <Card className="p-6 bg-[var(--alert-error-bg)] border-[var(--alert-error-border)] border-4 animate-pulse">
@@ -85,7 +97,7 @@ export const EmergencyPage: React.FC = () => {
           <p className="text-[var(--text-secondary)] mb-6">
             Press the SOS button to alert your emergency contacts and caregivers
           </p>
-          
+
           <button
             onClick={handleSOSPress}
             disabled={emergencyActivated}
@@ -177,7 +189,7 @@ export const EmergencyPage: React.FC = () => {
               This will immediately alert all your emergency contacts and caregivers.
             </p>
           </div>
-          
+
           <p className="text-[var(--text-secondary)]">
             The following actions will be taken:
           </p>
@@ -206,8 +218,6 @@ export const EmergencyPage: React.FC = () => {
           </div>
         </div>
       </Modal>
-
-      <BottomNav variant="patient" />
     </div>
   );
 };

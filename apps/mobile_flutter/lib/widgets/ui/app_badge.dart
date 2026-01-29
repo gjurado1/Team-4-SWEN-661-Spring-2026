@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-enum BadgeVariant { success, warning, error }
+enum AppBadgeVariant { success, warning, error }
 
 class AppBadge extends StatelessWidget {
-  final BadgeVariant variant;
+  final AppBadgeVariant variant;
   final String text;
 
   const AppBadge({
@@ -12,38 +12,50 @@ class AppBadge extends StatelessWidget {
     required this.text,
   });
 
+  const AppBadge.success({super.key, required this.text})
+      : variant = AppBadgeVariant.success;
+
+  const AppBadge.warning({super.key, required this.text})
+      : variant = AppBadgeVariant.warning;
+
+  const AppBadge.error({super.key, required this.text})
+      : variant = AppBadgeVariant.error;
+
   @override
   Widget build(BuildContext context) {
-    Color background;
-    Color textColor;
+    final theme = Theme.of(context);
+    final cs = theme.colorScheme;
+
+    late Color bg;
+    late Color fg;
 
     switch (variant) {
-      case BadgeVariant.success:
-        background = const Color(0xFFC6F6D5); // light green
-        textColor = const Color(0xFF2F855A);
+      case AppBadgeVariant.success:
+        bg = const Color(0xFF2F855A);
+        fg = Colors.white;
         break;
-      case BadgeVariant.warning:
-        background = const Color(0xFFFEF5E7); // light yellow
-        textColor = const Color(0xFFD69E2E);
+      case AppBadgeVariant.warning:
+        bg = const Color(0xFFD69E2E);
+        fg = Colors.white;
         break;
-      case BadgeVariant.error:
-        background = const Color(0xFFFED7D7); // light red
-        textColor = const Color(0xFFC53030);
+      case AppBadgeVariant.error:
+        bg = cs.error;
+        fg = Colors.white;
         break;
     }
 
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
       decoration: BoxDecoration(
-        color: background,
-        borderRadius: BorderRadius.circular(999),
+        color: bg,
+        borderRadius: BorderRadius.circular(6),
       ),
       child: Text(
-        text,
-        style: TextStyle(
+        text.toUpperCase(),
+        style: const TextStyle(
           fontSize: 12,
-          fontWeight: FontWeight.w600,
-          color: textColor,
+          fontWeight: FontWeight.w800,
+          letterSpacing: 0.6,
         ),
       ),
     );

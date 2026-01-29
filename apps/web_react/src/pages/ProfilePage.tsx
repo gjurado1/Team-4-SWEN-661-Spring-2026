@@ -1,9 +1,8 @@
 import React from 'react';
 import { useNavigate } from 'react-router';
 import { Card } from '../components/ui/Card';
-import { Button } from '../components/ui/Button';
-import { Input } from '../components/ui/Input';
-import { ArrowLeft, User, Mail, Phone, MapPin, Calendar, Edit } from 'lucide-react';
+import { HeaderVoiceButton } from '../components/navigation/HeaderVoiceButton';
+import { ArrowLeft, User, Mail, Phone, MapPin, Calendar } from 'lucide-react';
 
 export const ProfilePage: React.FC = () => {
   const navigate = useNavigate();
@@ -19,7 +18,7 @@ export const ProfilePage: React.FC = () => {
   };
 
   return (
-    <div 
+    <div
       className="min-h-screen bg-[var(--bg-primary)] relative"
       style={{
         paddingTop: 'max(env(safe-area-inset-top, 0px), 24px)',
@@ -29,12 +28,15 @@ export const ProfilePage: React.FC = () => {
       }}
     >
       {/* Header */}
-      <header className="bg-[var(--bg-surface)] border-b-2 border-[var(--border)] py-4 sticky top-0 z-40" style={{
-        marginTop: 'calc(-1 * max(env(safe-area-inset-top, 0px), 24px))',
-        paddingTop: 'calc(max(env(safe-area-inset-top, 0px), 24px) + 16px + 1rem)',
-        paddingLeft: 'calc(20px + env(safe-area-inset-left))',
-        paddingRight: 'calc(20px + env(safe-area-inset-right))'
-      }}>
+      <header
+        className="bg-[var(--bg-surface)] border-b-2 border-[var(--border)] py-4 sticky top-0 z-40"
+        style={{
+          marginTop: 'calc(-1 * max(env(safe-area-inset-top, 0px), 24px))',
+          paddingTop: 'calc(max(env(safe-area-inset-top, 0px), 24px) + 16px + 1rem)',
+          paddingLeft: 'calc(20px + env(safe-area-inset-left))',
+          paddingRight: 'calc(20px + env(safe-area-inset-right))'
+        }}
+      >
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <button
@@ -46,15 +48,21 @@ export const ProfilePage: React.FC = () => {
             </button>
             <h1>Profile</h1>
           </div>
+
+          {/* ✅ Voice button + actions */}
+          <HeaderVoiceButton />
         </div>
       </header>
 
-      <div className="space-y-6" style={{
-        paddingTop: '20px',
-        paddingLeft: 'calc(20px + env(safe-area-inset-left))',
-        paddingRight: 'calc(20px + env(safe-area-inset-right))',
-        paddingBottom: '20px'
-      }}>
+      <div
+        className="space-y-6"
+        style={{
+          paddingTop: '20px',
+          paddingLeft: 'calc(20px + env(safe-area-inset-left))',
+          paddingRight: 'calc(20px + env(safe-area-inset-right))',
+          paddingBottom: '20px'
+        }}
+      >
         {/* Profile Header */}
         <Card className="p-6 text-center">
           <div className="w-24 h-24 bg-[var(--button-primary)] rounded-full flex items-center justify-center text-white text-4xl font-bold mx-auto mb-4">
@@ -67,7 +75,7 @@ export const ProfilePage: React.FC = () => {
         {/* Personal Information */}
         <div>
           <h2 className="mb-4">Personal Information</h2>
-          
+
           <Card className="divide-y-2 divide-[var(--border)]">
             <div className="p-4 flex items-center gap-4">
               <Mail size={24} className="text-[var(--button-primary)] flex-shrink-0" />
@@ -106,7 +114,7 @@ export const ProfilePage: React.FC = () => {
         {/* Emergency Contact */}
         <div>
           <h2 className="mb-4">Emergency Contact</h2>
-          
+
           <Card className="p-4">
             <div className="flex items-center gap-4">
               <User size={24} className="text-[var(--status-error)] flex-shrink-0" />
@@ -116,25 +124,6 @@ export const ProfilePage: React.FC = () => {
               </div>
             </div>
           </Card>
-        </div>
-
-        {/* Account Actions */}
-        <div className="space-y-3">
-          <Button
-            variant="secondary"
-            onClick={() => navigate('/settings')}
-            className="w-full"
-          >
-            Go to Settings
-          </Button>
-          
-          <Button
-            variant="destructive"
-            onClick={() => navigate('/login')}
-            className="w-full"
-          >
-            Sign Out
-          </Button>
         </div>
       </div>
     </div>

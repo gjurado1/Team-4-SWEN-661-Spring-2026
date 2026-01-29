@@ -1,48 +1,81 @@
 import 'package:flutter/material.dart';
 
+enum AppButtonVariant { primary, secondary, destructive }
+
 class AppButton extends StatelessWidget {
-  final String text;
+  final AppButtonVariant variant;
   final VoidCallback? onPressed;
-  final bool isPrimary;
-  final bool isDisabled;
+  final Widget child;
+  final Widget? icon;
+  final bool expand;
 
   const AppButton({
     super.key,
-    required this.text,
-    this.onPressed,
-    this.isPrimary = true,
-    this.isDisabled = false,
+    required this.variant,
+    required this.onPressed,
+    required this.child,
+    this.icon,
+    this.expand = false,
   });
 
   @override
   Widget build(BuildContext context) {
-    final backgroundColor = isPrimary
-        ? const Color(0xFF4C6FBC) // --button-primary
-        : Colors.transparent;
+    final theme = Theme.of(context);
+    final cs = theme.colorScheme;
 
-    final borderColor = const Color(0xFFCBD5E0); // --border
-    final textColor = isPrimary ? Colors.white : const Color(0xFF1A2332);
+    late Color bg;
+    late Color fg;
+    late Color border;
 
-    return SizedBox(
-      width: double.infinity,
-      height: 48,
-      child: ElevatedButton(
-        onPressed: isDisabled ? null : onPressed,
-        style: ElevatedButton.styleFrom(
-          backgroundColor: backgroundColor,
-          foregroundColor: textColor,
-          disabledBackgroundColor: backgroundColor.withOpacity(0.5),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
-            side: isPrimary ? BorderSide.none : BorderSide(color: borderColor, width: 2),
-          ),
-          elevation: 0,
+    switch (variant) {
+      case AppButtonVariant.primary:
+        bg = cs.primary;
+        fg = Colors.white;
+        border = cs.primary;
+        break;
+      case AppButtonVariant.secondary:
+        bg = cs.surface;
+        fg = cs.onSurface;
+        border = theme.dividerColor;
+        break;
+      case AppButtonVariant.destructive:
+        bg = cs.error;
+        fg = Colors.white;
+        border = cs.error;
+        break;
+    }
+
+    final content = Row(
+      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        if (icon != null) ...[
+          IconTheme(data: IconThemeData(color: fg, size: 20), child: icon!),
+          const SizedBox(width: 8),
+        ],
+        DefaultTextStyle(
+          style: TextStyle(color: fg, fontWeight: FontWeight.w700),
+          child: child,
         ),
-        child: Text(
-          text,
-          style: const TextStyle(fontWeight: FontWeight.w600),
+      ],
+    );
+
+    final button = ElevatedButton(
+      onPressed: onPressed,
+      style: ElevatedButton.styleFrom(
+        backgroundColor: bg,
+        foregroundColor: fg,
+        elevation: variant == AppButtonVariant.secondary ? 0 : 2,
+        minimumSize: const Size(48, 48),
+        padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8),
+          side: BorderSide(color: border, width: 2),
         ),
       ),
+      child: content,
     );
+
+    return expand ? SizedBox(width: double.infinity, child: button) : button;
   }
 }
