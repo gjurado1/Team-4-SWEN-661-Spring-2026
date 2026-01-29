@@ -50,9 +50,18 @@ class AppThemeController extends ChangeNotifier {
     await prefs.setInt('careconnect-vision-theme', t.index);
   }
 
-  void setTextSizePercent(int p) {
+  /// Sets text size as a percentage (100, 150, 200)
+  void setTextSizePercent(int p) async {
+
     textSizePercent = p;
+    // Convert percentage (100, 150, 200) to double (1.0, 1.5, 2.0)
+    textScaleFactor = p / 100.0;
+
     notifyListeners();
+    // Save BOTH to prefs so they persist
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setInt('careconnect-text-percent', p);
+    await prefs.setDouble('careconnect-textsize', textScaleFactor);
   }
 
   // ✅ THIS is what makes Sepia actually change the app
