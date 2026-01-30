@@ -11,16 +11,6 @@ import '../widgets/accessibility/text_size_control.dart';
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
 
-  // Toggle Keys
-  static const readAloudKey = Key('settings_read_aloud');
-  static const voiceCommandsKey = Key('settings_voice_commands');
-  static const voiceRemindersKey = Key('settings_voice_reminders');
-
-  // Reset Keys
-  static const resetButtonKey = Key('settings_reset_button');
-  static const resetCancelKey = Key('settings_reset_cancel');
-  static const resetConfirmKey = Key('settings_reset_confirm');
-
   @override
   State<SettingsPage> createState() => _SettingsPageState();
 }
@@ -174,17 +164,28 @@ class _SettingsPageState extends State<SettingsPage> {
               children: [
                 IconButton(
                   tooltip: 'Back',
-                  onPressed: () {
-                    if (context.canPop()) {
+                  onPressed: () async {
+                    // 1️⃣ Normal case: go back if there is history
+                    if (Navigator.of(context).canPop()) {
                       context.pop();
-                    } else {
-                      // If the stack is empty, go to the root/home page
+                      return;
+                    }
+
+                    // 2️⃣ Fallback: determine where to go based on role
+                    final prefs = await SharedPreferences.getInstance();
+                    final role = prefs.getString('careconnect-role');
+
+                    if (role == 'caregiver') {
+                      context.go('/caregiver/dashboard');
+                    } else if (role == 'patient') {
                       context.go('/patient/dashboard');
+                    } else {
+                      // Not logged in
+                      context.go('/login');
                     }
                   },
                   icon: const Icon(Icons.arrow_back),
                 ),
-
                 const SizedBox(width: 6),
                 Text(
                   'Settings',
@@ -223,19 +224,19 @@ class _SettingsPageState extends State<SettingsPage> {
                   ),
                   const SizedBox(height: 12),
 
-                  const _SettingsPanel(
+                  _SettingsPanel(
                     title: 'Vision Theme',
                     subtitle: 'Contrast and color settings',
                     leadingIcon: Icons.visibility_outlined,
-                    child: ThemeSelector(),
+                    child: const ThemeSelector(),
                   ),
                   const SizedBox(height: 12),
 
-                  const _SettingsPanel(
+                  _SettingsPanel(
                     title: 'Text Size',
                     subtitle: 'Adjust font size',
                     leadingIcon: Icons.text_fields,
-                    child: TextSizeControl(),
+                    child: const TextSizeControl(),
                   ),
                   const SizedBox(height: 12),
 
@@ -249,7 +250,6 @@ class _SettingsPageState extends State<SettingsPage> {
                           title: 'Read Aloud',
                           subtitle: 'Have the app read screens aloud',
                           value: readAloud,
-                          switchKey: SettingsPage.readAloudKey,
                           onChanged: (v) {
                             setState(() => readAloud = v);
                             _saveSetting('careconnect-read-aloud', v);
@@ -260,7 +260,6 @@ class _SettingsPageState extends State<SettingsPage> {
                           title: 'Voice Commands',
                           subtitle: 'Navigate and act using your voice',
                           value: voiceCommands,
-                          switchKey: SettingsPage.readAloudKey,
                           onChanged: (v) {
                             setState(() => voiceCommands = v);
                             _saveSetting('careconnect-voice-commands', v);
@@ -271,7 +270,6 @@ class _SettingsPageState extends State<SettingsPage> {
                           title: 'Voice Reminders',
                           subtitle: 'Play spoken reminders and alerts',
                           value: voiceReminders,
-                          switchKey: SettingsPage.readAloudKey,
                           onChanged: (v) {
                             setState(() => voiceReminders = v);
                             _saveSetting('careconnect-voice-reminders', v);
@@ -405,7 +403,6 @@ class _SettingsPageState extends State<SettingsPage> {
                         ),
                         const SizedBox(height: 14),
                         AppButton(
-                          key: SettingsPage.resetButtonKey,
                           variant: AppButtonVariant.secondary,
                           onPressed: _confirmReset,
                           icon: const Icon(Icons.refresh, size: 18),
@@ -477,16 +474,11 @@ class _ToggleRow extends StatelessWidget {
   final bool value;
   final ValueChanged<bool> onChanged;
 
-  // ✅ NEW: optional key used for the Switch (so tests can find it)
-  final Key? switchKey;
-
   const _ToggleRow({
-    super.key,
     required this.title,
     required this.subtitle,
     required this.value,
     required this.onChanged,
-    this.switchKey, // ✅ THIS fixes "not initialized" + enables switchKey:
   });
 
   @override
@@ -507,22 +499,17 @@ class _ToggleRow extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  title,
-                  style: theme.textTheme.bodyMedium
-                      ?.copyWith(fontWeight: FontWeight.w800),
-                ),
+                Text(title,
+                    style: theme.textTheme.bodyMedium
+                        ?.copyWith(fontWeight: FontWeight.w800)),
                 const SizedBox(height: 4),
-                Text(
-                  subtitle,
-                  style: theme.textTheme.bodySmall
-                      ?.copyWith(color: theme.hintColor),
-                ),
+                Text(subtitle,
+                    style: theme.textTheme.bodySmall
+                        ?.copyWith(color: theme.hintColor)),
               ],
             ),
           ),
           Switch(
-            key: switchKey, // ✅ THIS is where the Key is applied
             value: value,
             activeThumbColor: cs.primary,
             onChanged: onChanged,
@@ -532,7 +519,6 @@ class _ToggleRow extends StatelessWidget {
     );
   }
 }
-
 
 class _NavRow extends StatelessWidget {
   final _SettingsItem item;
@@ -615,9 +601,8 @@ class _ResetDialog extends StatelessWidget {
         ],
       ),
       actions: [
-        TextButton(key: SettingsPage.resetCancelKey, onPressed: onCancel, child: const Text('Cancel')),
+        TextButton(onPressed: onCancel, child: const Text('Cancel')),
         ElevatedButton(
-          key: SettingsPage.resetConfirmKey,
           onPressed: onConfirm,
           style: ElevatedButton.styleFrom(
               backgroundColor: cs.error, foregroundColor: Colors.white),

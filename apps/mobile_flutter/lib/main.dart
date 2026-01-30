@@ -24,11 +24,11 @@ class _RootState extends State<_Root> {
   void initState() {
     super.initState();
     _themeController = AppThemeController();
-    
-    // Router is initialized once here to prevent route resets on rebuild
-    _router = buildRouter(); 
 
-    // Important: Ensure the controller loads saved preferences
+    // Router is initialized once here to prevent route resets on rebuild
+    _router = buildRouter();
+
+    // Load saved preferences (theme mode, vision theme, text scale, etc.)
     _themeController.loadFromPrefs();
   }
 
@@ -49,11 +49,10 @@ class _RootState extends State<_Root> {
             debugShowCheckedModeBanner: false,
             routerConfig: _router,
 
-            // --- FIXED: Theme linkage activated ---
-            theme: _themeController.currentTheme,
-            darkTheme: ThemeData.dark(useMaterial3: true),
-            themeMode: _themeController.themeMode, 
-            // ---------------------------------------
+            // ✅ Use controller-driven themes so Sepia/DarkContrast actually apply
+            theme: _themeController.lightTheme,
+            darkTheme: _themeController.darkTheme,
+            themeMode: _themeController.themeMode,
 
             builder: (context, child) {
               final mediaQuery = MediaQuery.of(context);
@@ -61,7 +60,7 @@ class _RootState extends State<_Root> {
                 data: mediaQuery.copyWith(
                   textScaler: TextScaler.linear(_themeController.textScaleFactor),
                 ),
-                child: child!,
+                child: child ?? const SizedBox.shrink(),
               );
             },
           );

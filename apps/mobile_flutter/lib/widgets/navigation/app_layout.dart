@@ -6,7 +6,7 @@ class AppLayout extends StatelessWidget {
   final String currentPath;
 
   /// Use this to navigate (Navigator, GoRouter, etc.)
-  final ValueChanged<String> onNavigate;
+  final void Function(String path, {bool push}) onNavigate;
 
   const AppLayout({
     super.key,

@@ -87,14 +87,7 @@ class _MessagesPageState extends State<MessagesPage> {
               children: [
                 IconButton(
                   tooltip: 'Back',
-                   onPressed: () {
-                    if (context.canPop()) {
-                      context.pop();
-                    } else {
-                      // If the stack is empty, go to the root/home page
-                      context.go('/patient/dashboard');
-                    }
-                  },
+                  onPressed: () => context.pop(),
                   icon: const Icon(Icons.arrow_back),
                 ),
                 const SizedBox(width: 6),

@@ -5,7 +5,7 @@ enum AppRole { caregiver, patient }
 
 class BottomNav extends StatefulWidget {
   final String currentPath;
-  final ValueChanged<String> onNavigate;
+  final void Function(String path, {bool push}) onNavigate;
 
   const BottomNav({
     super.key,
@@ -21,11 +21,6 @@ class _BottomNavState extends State<BottomNav> {
   bool _expanded = false;
   AppRole _role = AppRole.caregiver;
 
-  String _keyFromLabel(String label) {
-  // "Patient List" -> "patient_list"
-  return label.toLowerCase().replaceAll(' ', '_');
-}
-
   @override
   void initState() {
     super.initState();
@@ -35,6 +30,7 @@ class _BottomNavState extends State<BottomNav> {
   Future<void> _loadRole() async {
     final prefs = await SharedPreferences.getInstance();
     final stored = prefs.getString('careconnect-role');
+    if (!mounted) return;
     setState(() {
       _role = stored == 'patient' ? AppRole.patient : AppRole.caregiver;
     });
@@ -48,13 +44,13 @@ class _BottomNavState extends State<BottomNav> {
   List<_NavItem> get _items {
     if (_role == AppRole.caregiver) {
       return [
-        const _NavItem(icon: Icons.home, label: 'Home', path: '/caregiver/dashboard'),
-        const _NavItem(icon: Icons.assignment, label: 'Patient List', path: '/caregiver/patients'),
-        const _NavItem(icon: Icons.bar_chart, label: 'Schedule', path: '/caregiver/schedule'),
-        const _NavItem(icon: Icons.message, label: 'Messages', path: '/messages'),
-        const _NavItem(icon: Icons.person, label: 'Profile', path: '/profile'),
-        const _NavItem(icon: Icons.settings, label: 'Settings', path: '/settings'),
-        const _NavItem(icon: Icons.warning_amber, label: 'Emergency', path: '/emergency'),
+        _NavItem(icon: Icons.home, label: 'Home', path: '/caregiver/dashboard'),
+        _NavItem(icon: Icons.assignment, label: 'Patient List', path: '/caregiver/patients'),
+        _NavItem(icon: Icons.bar_chart, label: 'Schedule', path: '/caregiver/schedule'),
+        _NavItem(icon: Icons.message, label: 'Messages', path: '/messages'),
+        _NavItem(icon: Icons.person, label: 'Profile', path: '/profile'),
+        _NavItem(icon: Icons.settings, label: 'Settings', path: '/settings'),
+        _NavItem(icon: Icons.warning_amber, label: 'Emergency', path: '/emergency'),
         _NavItem(
           icon: Icons.logout,
           label: 'Logout',
@@ -65,12 +61,12 @@ class _BottomNavState extends State<BottomNav> {
     }
 
     return [
-      const _NavItem(icon: Icons.home, label: 'Home', path: '/patient/dashboard'),
-      const _NavItem(icon: Icons.favorite, label: 'Check-In', path: '/patient/checkin'),
-      const _NavItem(icon: Icons.message, label: 'Messages', path: '/messages'),
-      const _NavItem(icon: Icons.person, label: 'Profile', path: '/profile'),
-      const _NavItem(icon: Icons.settings, label: 'Settings', path: '/settings'),
-      const _NavItem(icon: Icons.warning_amber, label: 'Emergency', path: '/emergency'),
+      _NavItem(icon: Icons.home, label: 'Home', path: '/patient/dashboard'),
+      _NavItem(icon: Icons.favorite, label: 'Check-In', path: '/patient/checkin'),
+      _NavItem(icon: Icons.message, label: 'Messages', path: '/messages'),
+      _NavItem(icon: Icons.person, label: 'Profile', path: '/profile'),
+      _NavItem(icon: Icons.settings, label: 'Settings', path: '/settings'),
+      _NavItem(icon: Icons.warning_amber, label: 'Emergency', path: '/emergency'),
       _NavItem(
         icon: Icons.logout,
         label: 'Logout',
@@ -82,7 +78,12 @@ class _BottomNavState extends State<BottomNav> {
 
   void _navigate(_NavItem item) async {
     if (item.onTap != null) await item.onTap!.call();
-    widget.onNavigate(item.path);
+
+    const pushRoutes = {'/settings', '/profile', '/messages', '/emergency'};
+    final shouldPush = pushRoutes.contains(item.path);
+
+    widget.onNavigate(item.path, push: shouldPush);
+    if (!mounted) return;
     setState(() => _expanded = false);
   }
 
@@ -91,7 +92,7 @@ class _BottomNavState extends State<BottomNav> {
     final theme = Theme.of(context);
     final cs = theme.colorScheme;
 
-    // Reserve bottom safe area like your CSS #root padding-bottom
+    // Reserve bottom safe area
     final bottomPad = MediaQuery.of(context).padding.bottom;
 
     return Stack(
@@ -104,49 +105,62 @@ class _BottomNavState extends State<BottomNav> {
               child: SafeArea(
                 child: Column(
                   children: [
-                    // Collapse header button (like your Collapse Menu button)
+                    // Collapse header button (smaller, more React-like)
                     Container(
-                      padding: const EdgeInsets.all(16),
+                      padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
                         color: cs.surface,
                         border: Border(bottom: BorderSide(color: theme.dividerColor, width: 2)),
                       ),
                       child: SizedBox(
-                        height: 64,
+                        height: 52,
                         width: double.infinity,
                         child: OutlinedButton.icon(
                           onPressed: () => setState(() => _expanded = false),
-                          icon: const Icon(Icons.expand_more, size: 28),
+                          icon: const Icon(Icons.expand_more, size: 22),
                           label: const Text(
                             'Collapse Menu',
-                            style: TextStyle(fontSize: 20, fontWeight: FontWeight.w800),
+                            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800),
                           ),
                           style: OutlinedButton.styleFrom(
                             side: BorderSide(color: theme.dividerColor, width: 2),
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                           ),
                         ),
                       ),
                     ),
 
-                    // Grid content
+                    // Grid content (constrain width + compact tiles)
                     Expanded(
                       child: SingleChildScrollView(
                         padding: const EdgeInsets.all(16),
-                        child: GridView.count(
-                          crossAxisCount: 2,
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          mainAxisSpacing: 16,
-                          crossAxisSpacing: 16,
-                          childAspectRatio: 1.0,
-                          children: [
-                            for (final item in _items)
-                              _NavGridTile(
-                                item: item,
-                                active: widget.currentPath == item.path,
-                                onTap: () => _navigate(item),
-                              ),
-                          ],
+                        child: Center(
+                          child: ConstrainedBox(
+                            constraints: const BoxConstraints(maxWidth: 720),
+                            child: LayoutBuilder(
+                              builder: (context, constraints) {
+                                final crossAxisCount = constraints.maxWidth >= 720 ? 3 : 2;
+
+                                return GridView.count(
+                                  crossAxisCount: crossAxisCount,
+                                  shrinkWrap: true,
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  mainAxisSpacing: 12,
+                                  crossAxisSpacing: 12,
+                                  // Wide buttons like React (was square-ish)
+                                  childAspectRatio: 2.6,
+                                  children: [
+                                    for (final item in _items)
+                                      _NavGridTile(
+                                        item: item,
+                                        active: widget.currentPath == item.path,
+                                        onTap: () => _navigate(item),
+                                      ),
+                                  ],
+                                );
+                              },
+                            ),
+                          ),
                         ),
                       ),
                     ),
@@ -175,8 +189,8 @@ class _BottomNavState extends State<BottomNav> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Icon(Icons.menu, size: 32),
-                      const SizedBox(width: 12),
+                      const Icon(Icons.menu, size: 28),
+                      const SizedBox(width: 10),
                       Text(
                         'Menu',
                         style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w800),
@@ -223,39 +237,55 @@ class _NavGridTile extends StatelessWidget {
     final theme = Theme.of(context);
     final cs = theme.colorScheme;
 
+    // React-like compact sizes
+    const iconSize = 26.0;
+    const bubbleSize = 40.0;
+
     return Semantics(
       button: true,
       selected: active,
       label: item.label,
       child: InkWell(
-        key: ValueKey('nav_${item.label.toLowerCase().replaceAll(' ', '_')}'),
         onTap: onTap,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(14),
         child: Container(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
           decoration: BoxDecoration(
             color: active ? cs.primary : cs.surface,
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: active ? cs.primary : theme.dividerColor, width: 2),
+            borderRadius: BorderRadius.circular(14),
+            border: Border.all(
+              color: active ? cs.primary : theme.dividerColor,
+              width: 2,
+            ),
           ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+          child: Row(
             children: [
               Container(
-                padding: const EdgeInsets.all(12),
+                width: bubbleSize,
+                height: bubbleSize,
                 decoration: BoxDecoration(
-                  color: active ? Colors.white.withValues(alpha: 0.20) : cs.surfaceContainerHighest,
+                  color: active
+                      ? Colors.white.withValues(alpha: 0.18)
+                      : cs.surfaceContainerHighest,
                   shape: BoxShape.circle,
                 ),
-                child: Icon(item.icon, size: 40, color: active ? Colors.white : cs.primary),
+                child: Icon(
+                  item.icon,
+                  size: iconSize,
+                  color: active ? Colors.white : cs.primary,
+                ),
               ),
-              const SizedBox(height: 12),
-              Text(
-                item.label,
-                textAlign: TextAlign.center,
-                style: theme.textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.w800,
-                  color: active ? Colors.white : cs.onSurface,
+              const SizedBox(width: 12),
+              Expanded(
+                child: Text(
+                  item.label,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: theme.textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.w800,
+                    fontSize: 16,
+                    color: active ? Colors.white : cs.onSurface,
+                  ),
                 ),
               ),
             ],
