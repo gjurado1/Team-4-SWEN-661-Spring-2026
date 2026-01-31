@@ -10,19 +10,29 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+
+  # UI / Widgets
   pin_code_fields: ^8.0.1
   fl_chart: ^0.68.0
   table_calendar: ^3.1.2
+  cupertino_icons: ^1.0.8
+
+  # State & Navigation
   flutter_riverpod: ^2.5.1
   go_router: ^14.2.0
+
+  # Persistence
   shared_preferences: ^2.2.3
+  sqflite: ^2.3.0        # ✅ SQLite
+  path: ^1.9.0           # ✅ Required for DB path
+
+  # Utilities
   intl: ^0.19.0
-  cupertino_icons: ^1.0.8
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^4.0.0  # Downgraded to a realistic version
+  flutter_lints: ^4.0.0
   mocktail: ^1.0.4
   riverpod_test: ^0.1.6
 
