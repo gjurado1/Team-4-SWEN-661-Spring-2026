@@ -56,12 +56,11 @@ When rebasing, Git may pause if someone else modified the same lines (common in 
 
 1. **Identify Conflicts:** Git will list the conflicted files in the terminal.
 2. **Resolve Manually:** Open files in VS Code/Android Studio. Look for the `<<<<<<<` markers and choose the correct code.
-3. **Stage Changes:** ```bash
+3. **Stage Changes:** 
+
+```bash
 git add <conflicted-file-path>
 ```
-
-```
-
 
 4. **Continue Rebase:** 
 
