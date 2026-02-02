@@ -3,7 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../services/database_helper.dart';
-import '../models/user.dart'; // Just in case you need the User type
+// import '../models/user.dart'; // Just in case you need the User type
 
 import '../widgets/ui/app_alert.dart';
 import '../widgets/ui/app_button.dart';
