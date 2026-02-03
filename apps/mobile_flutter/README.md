@@ -143,7 +143,7 @@ The generated coverage report is included in the repository under:
 coverage/html/index.html
 ```
 
-The project meets the **minimum 60% test coverage requirement** as specified in the assignment.
+Current coverage is 75.4 %. The project meets the **minimum 60% test coverage requirement** as specified in the assignment.
 
 ---
 
@@ -201,7 +201,7 @@ This project demonstrates:
 * Offline-first mobile application design
 * Local data persistence with SQLite
 * State management using Riverpod
-* Flutter testing and coverage reporting
+* Flutter testing and (LCOV) coverage reporting
 * Clear documentation and reproducible builds
 
 ---
