@@ -1,7 +1,5 @@
 # CareConnect – Mobile Flutter Application
 
-
-
 ## Project Description
 
 **CareConnect Mobile** is a Flutter-based mobile application designed to support caregivers and patients in environments where connectivity may be unreliable. The app focuses on usability, accessibility, and offline-first functionality to ensure critical information remains available at all times.
@@ -81,15 +79,25 @@ Build artifacts are included with the submission.
 ### Prerequisites
 
 * Flutter SDK (>= 3.4.0)
+  - Verify installation: `flutter --version`
 * Chrome (for web demo)
-* Android Emulator / physical device
+- Android SDK & Platform Tools
+- Java Development Kit (JDK): JDK 17 recommended
+- Android Device or Emulator
+  - Physical device with USB debugging enabled or
+  - Android Emulator configured in Android Studio
+
+Verify environment readiness: `flutter doctor`
 
 ### Steps
 
 ```bash
 git clone https://github.com/gjurado1/Team-4-SWEN-661-Spring-2026.git
+
 cd Team-4-SWEN-661-Spring-2026
+# This installs all dependencies defined in pubspec.yaml.
 flutter pub get
+
 flutter run 
 ```
 
@@ -147,6 +155,39 @@ Current coverage is 75.4 %. The project meets the **minimum 60% test coverage re
 
 ---
 
+## Build Android APK
+
+Debug APK (Development & Local Testing)
+
+``bash
+flutter build apk --debug
+```
+
+Output file:
+
+```
+build/app/outputs/flutter-apk/app-debug.apk
+```
+
+Use this build for:
+
+* Emulator testing
+* Debugging
+* Developer validation
+
+---
+
+Release APK (UAT / Submission / Distribution)
+
+```bash
+flutter build apk --release
+```
+
+Output file:
+
+```
+build/app/outputs/flutter-apk/app-release.apk
+```
 ## ⚠️ Known Issues or Limitations
 
 * SQLite is not supported on Flutter Web.
