@@ -159,13 +159,13 @@ Current coverage is 75.4 %. The project meets the **minimum 60% test coverage re
 
 Debug APK (Development & Local Testing)
 
-``bash
+```bash
 flutter build apk --debug
 ```
 
 Output file:
 
-```
+```bash
 build/app/outputs/flutter-apk/app-debug.apk
 ```
 
@@ -188,6 +188,7 @@ Output file:
 ```
 build/app/outputs/flutter-apk/app-release.apk
 ```
+
 ## ⚠️ Known Issues or Limitations
 
 * SQLite is not supported on Flutter Web.
