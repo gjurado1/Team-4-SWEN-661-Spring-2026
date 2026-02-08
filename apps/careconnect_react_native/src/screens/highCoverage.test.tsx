@@ -11,7 +11,7 @@ jest.mock("@/components/navigation/AppLayout", () => {
   return {
     __esModule: true,
     AppLayout: ({ children }: { children: React.ReactNode }) =>
-      ReactActual.createElement(RN.View, null, children)
+      ReactActual.createElement(RN.View, null, children),
   };
 });
 
@@ -21,7 +21,7 @@ jest.mock("@/theme/ThemeProvider", () => {
   const RN = require("react-native");
   return {
     __esModule: true,
-    Text: (props: RN.TextProps) => ReactActual.createElement(RN.Text, props),
+    Text: (props: any) => ReactActual.createElement(RN.Text, props),
     useAppTheme: () => ({
       textScale: 1,
       theme: {
@@ -34,39 +34,39 @@ jest.mock("@/theme/ThemeProvider", () => {
           success: "#34C759",
           warning: "#FF9F0A",
           border: "#D1D1D6",
-          muted: "#8E8E93"
-        }
-      }
-    })
+          muted: "#8E8E93",
+        },
+      },
+    }),
   };
 });
 
-// ✅ Mock Auth hook if any screen imports it directly
+// ✅ Mock Auth hook (your screens use useAuth())
 jest.mock("@/context/AuthContext", () => ({
   __esModule: true,
   useAuth: () => ({
     role: "patient",
     login: jest.fn(),
-    logout: jest.fn()
-  })
+    logout: jest.fn(),
+  }),
 }));
 
-// ✅ Mock Settings store used by SettingsScreen
-jest.mock("@/store/useSettingsStore", () => ({
+// ✅ Mock SettingsContext (this DOES exist in your repo)
+jest.mock("@/context/SettingsContext", () => ({
   __esModule: true,
-  useSettingsStore: () => ({
+  useSettings: () => ({
     themeMode: "system",
-    textScale: 1,
     setThemeMode: jest.fn(),
-    setTextScale: jest.fn()
-  })
+    textScale: 1,
+    setTextScale: jest.fn(),
+  }),
 }));
 
-// ✅ If any screen uses react-navigation hooks directly
+// ✅ Mock navigation hooks
 jest.mock("@react-navigation/native", () => ({
   __esModule: true,
   useNavigation: () => ({ navigate: jest.fn(), goBack: jest.fn() }),
-  useRoute: () => ({ params: {} })
+  useRoute: () => ({ params: {} }),
 }));
 
 describe("high coverage screens", () => {
