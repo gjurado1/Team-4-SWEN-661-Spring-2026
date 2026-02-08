@@ -4,9 +4,27 @@ const tsPlugin = require("@typescript-eslint/eslint-plugin");
 const reactPlugin = require("eslint-plugin-react");
 const reactHooksPlugin = require("eslint-plugin-react-hooks");
 const securityPlugin = require("eslint-plugin-security");
+const globals = require("globals");
 
 module.exports = [
   // Ignore first so ESLint doesn't try to lint generated folders/configured outputs
+  {
+    files: ["**/*.test.ts", "**/*.test.tsx", "**/__tests__/**/*.{ts,tsx}"],
+    languageOptions: {
+      globals: {
+        jest: "readonly",
+        describe: "readonly",
+        it: "readonly",
+        test: "readonly",
+        expect: "readonly",
+        beforeEach: "readonly",
+        afterEach: "readonly",
+        beforeAll: "readonly",
+        afterAll: "readonly",
+      },
+    },
+  },
+
   {
     ignores: ["node_modules/**", "dist/**", "build/**"],
   },
@@ -23,7 +41,14 @@ module.exports = [
       },
     },
   },
-
+  {
+    files: ["**/*.test.ts", "**/*.test.tsx", "**/__tests__/**/*.{ts,tsx}"],
+    languageOptions: {
+      globals: {
+        ...globals.jest,
+     },
+    },
+  },
   // ✅ Node/CommonJS config files (Babel/Metro/other *.config.js)
   {
     files: ["babel.config.js", "metro.config.js", "*.config.js"],
@@ -36,6 +61,7 @@ module.exports = [
         process: "readonly",
       },
     },
+    
     rules: {
       // optional: allow console in config files
       "no-console": "off",
