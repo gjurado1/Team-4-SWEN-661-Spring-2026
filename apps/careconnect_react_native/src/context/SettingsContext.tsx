@@ -37,7 +37,7 @@ function parseTextScale(v: string | null): number {
   if (!v) return 1;
   const n = Number(v);
   if (!Number.isFinite(n)) return 1;
-  return Math.max(0.85, Math.min(1.5, n));
+  return Math.max(0.85, Math.min(2.0, n));
 }
 
 const SettingsContext = React.createContext<SettingsContextValue | null>(null);
@@ -76,7 +76,7 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const setTextScale = React.useCallback(async (n: number) => {
-    const clamped = Math.max(0.85, Math.min(1.5, n));
+    const clamped = Math.max(0.85, Math.min(2.0, n));
     await AsyncStorage.setItem(STORAGE_TEXT_SCALE, String(clamped));
     setState((s) => ({ ...s, textScale: clamped }));
   }, []);
