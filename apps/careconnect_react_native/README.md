@@ -109,8 +109,8 @@ The report is auto-generated and can be viewed at: `coverage/lcov-report/index.h
 
 | Metric | Result | Requirement |
 | --- | --- | --- |
-| **Statements** | **69.12%** | 60% |
-| **Lines** | **70.78%** | 60% |
+| **Statements** | **67,23%** | 60% |
+| **Lines** | **69.13%** | 60% |
 | **Functions** | **58.94%** | - |
 
 ---
