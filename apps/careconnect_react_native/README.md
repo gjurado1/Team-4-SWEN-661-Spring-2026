@@ -107,11 +107,11 @@ The report is auto-generated and can be viewed at: `coverage/lcov-report/index.h
 
 ### Current Coverage Stats
 
-| Metric | Result | Requirement |
-| --- | --- | --- |
-| **Statements** | **67.23%** | 60% |
-| **Lines** | **69.13%** | 60% |
-| **Functions** | **58.94%** | - |
+| Metric | Result | 
+| --- | --- |
+| **Statements** | **67.23%** |
+| **Lines** | **69.13%** |
+| **Functions** | **58.94%** |
 
 ---
 
