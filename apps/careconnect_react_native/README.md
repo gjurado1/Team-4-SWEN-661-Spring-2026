@@ -77,7 +77,7 @@ npm install
 
 4. **Start the Development Server:**
 ```bash
-npm run start
+npx expo start --web
 
 ```
 
