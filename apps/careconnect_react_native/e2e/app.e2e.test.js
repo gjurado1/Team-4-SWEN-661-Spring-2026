@@ -1,6 +1,10 @@
 describe("CareConnect E2E", () => {
   beforeAll(async () => {
-    await device.launchApp({ newInstance: true });
+    await device.launchApp();
+  });
+
+  beforeEach(async () => {
+    await device.reloadReactNative();
   });
 
   it("should show a screen after launch", async () => {
