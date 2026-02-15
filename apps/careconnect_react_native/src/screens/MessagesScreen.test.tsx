@@ -176,10 +176,10 @@ describe("MessagesScreen", () => {
   });
 
   it("selecting a thread updates the compose 'To:' and clears NEW for that thread", () => {
-    const { getByText, queryByText, getByA11yLabel } = render(<MessagesScreen />);
+    const { getByText, queryByText, getByLabelText } = render(<MessagesScreen />);
 
     // Switch to Robert Chen thread
-    fireEvent.press(getByA11yLabel("Open thread with Robert Chen"));
+    fireEvent.press(getByLabelText("Open thread with Robert Chen"));
 
     expect(getByText("To: Robert Chen")).toBeTruthy();
 
@@ -190,7 +190,7 @@ describe("MessagesScreen", () => {
     expect(getByText("NEW")).toBeTruthy();
 
     // Now open Sarah to mark it read
-    fireEvent.press(getByA11yLabel("Open thread with Sarah Johnson"));
+    fireEvent.press(getByLabelText("Open thread with Sarah Johnson"));
 
     expect(getByText("To: Sarah Johnson")).toBeTruthy();
     // Sarah should be marked read now, so NEW should disappear.
@@ -198,7 +198,7 @@ describe("MessagesScreen", () => {
   });
 
   it("sending a non-empty message updates the selected thread last message and clears draft", () => {
-    const { getByText, getByA11yLabel, getByTestId } = render(<MessagesScreen />);
+    const { getByText, getByTestId } = render(<MessagesScreen />);
 
     // Ensure we are on Sarah thread
     expect(getByText("To: Sarah Johnson")).toBeTruthy();
@@ -213,8 +213,6 @@ describe("MessagesScreen", () => {
     fireEvent(getByTestId("mock-textarea"), "changeText", "Hello Sarah!");
 
     // Press Send
-    fireEvent.press(getByA11yLabel("Send message", { exact: false }) ?? getByTestId("mock-button-Send"));
-    // Fallback: press by testID
     fireEvent.press(getByTestId("mock-button-Send"));
 
     // Last message should update for selected thread

@@ -64,11 +64,15 @@ jest.mock("../components/ui/AppCard", () => ({
 }));
 
 jest.mock("../components/ui/AppButton", () => ({
-  AppButton: ({ title, onPress, accessibilityLabel }: any) => (
-    <button onClick={onPress} aria-label={accessibilityLabel || title}>
-      {title}
-    </button>
-  ),
+  AppButton: ({ title, onPress, accessibilityLabel }: any) => {
+    const React = require("react");
+    const { Pressable, Text } = require("react-native");
+    return (
+      <Pressable onPress={onPress} accessibilityRole="button" accessibilityLabel={accessibilityLabel || title}>
+        <Text>{title}</Text>
+      </Pressable>
+    );
+  },
 }));
 
 jest.mock("../components/ui/PageHeader", () => ({
@@ -156,7 +160,7 @@ describe("SettingsScreen", () => {
     mockCanGoBack.mockReturnValue(true);
     (AsyncStorage.getItem as jest.Mock).mockResolvedValue(null);
 
-    const { getByLabelText, queryByLabelText, getByText } = render(
+    const { getByLabelText, queryByLabelText, getAllByText } = render(
       <SettingsScreen />
     );
 
@@ -167,7 +171,7 @@ describe("SettingsScreen", () => {
     ).toBeTruthy();
 
     // Confirm reset
-    fireEvent.press(getByText("Reset Settings"));
+    fireEvent.press(getAllByText("Reset Settings")[0]);
 
     await waitFor(() => {
       expect(AsyncStorage.removeItem).toHaveBeenCalledWith(
@@ -194,7 +198,7 @@ describe("SettingsScreen", () => {
     mockCanGoBack.mockReturnValue(true);
     (AsyncStorage.getItem as jest.Mock).mockResolvedValue(null);
 
-    const { getByLabelText, getByText, queryByLabelText } = render(
+    const { getByLabelText, getAllByText, queryByLabelText } = render(
       <SettingsScreen />
     );
 
@@ -203,7 +207,7 @@ describe("SettingsScreen", () => {
       getByLabelText("Reset all settings confirmation")
     ).toBeTruthy();
 
-    fireEvent.press(getByText("Cancel"));
+    fireEvent.press(getAllByText("Cancel")[0]);
 
     expect(
       queryByLabelText("Reset all settings confirmation")

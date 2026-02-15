@@ -34,6 +34,7 @@ export default function ThemeSelector() {
             <Pressable
               key={t.key}
               onPress={() => setVisionTheme(t.key)}
+              testID={`settings-theme-${t.key}`}
               style={[
                 styles.tile,
                 {

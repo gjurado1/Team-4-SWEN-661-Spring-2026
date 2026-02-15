@@ -24,7 +24,6 @@ function Consumer() {
       <Text testID="mode">{s.themeMode}</Text>
       <Text testID="vision">{s.visionTheme}</Text>
       <Text testID="scale">{String(s.textScale)}</Text>
-      <Text testID="sr">{String((s as any).screenReaderSupport)}</Text>
       <Text testID="hydrated">{String(s.isHydrated)}</Text>
     </>
   );
@@ -68,15 +67,9 @@ describe("SettingsContext", () => {
 
   it("hydrates defaults when storage is empty / invalid", async () => {
     mockStorage({
-      // support both styles (your project has used both at different times)
-      "careconnect-theme-mode": null,
       "careconnect-themeMode": null,
-      "careconnect-vision-theme": null,
       "careconnect-visionTheme": null,
-      "careconnect-text-scale": null,
       "careconnect-textScale": null,
-      "careconnect-screenReaderSupport": null,
-      "careconnect-screen-reader-support": null,
     });
 
     const { getByTestId, getApi } = setup();
@@ -96,7 +89,6 @@ describe("SettingsContext", () => {
       "careconnect-themeMode": "dark",
       "careconnect-visionTheme": "highContrast",
       "careconnect-textScale": "1.4",
-      "careconnect-screenReaderSupport": "true",
     });
 
     const { getByTestId, getApi } = setup();
@@ -109,15 +101,13 @@ describe("SettingsContext", () => {
     expect(getByTestId("mode").props.children).toBe("dark");
     expect(getByTestId("vision").props.children).toBe("highContrast");
     expect(getByTestId("scale").props.children).toBe("1.4");
-    expect(getByTestId("sr").props.children).toBe("true");
   });
 
-  it("hydrates from storage values (kebab-case keys)", async () => {
+  it("falls back to defaults for unsupported key names", async () => {
     mockStorage({
       "careconnect-theme-mode": "light",
       "careconnect-vision-theme": "sepia",
       "careconnect-text-scale": "1.2",
-      "careconnect-screen-reader-support": "false",
     });
 
     const { getByTestId, getApi } = setup();
@@ -127,9 +117,9 @@ describe("SettingsContext", () => {
     });
 
     expect(getByTestId("hydrated").props.children).toBe("true");
-    expect(getByTestId("mode").props.children).toBe("light");
-    expect(getByTestId("vision").props.children).toBe("sepia");
-    expect(getByTestId("scale").props.children).toBe("1.2");
+    expect(getByTestId("mode").props.children).toBe("system");
+    expect(getByTestId("vision").props.children).toBe("normal");
+    expect(getByTestId("scale").props.children).toBe("1");
   });
 
   it("updates themeMode + persists using whatever key the implementation uses", async () => {

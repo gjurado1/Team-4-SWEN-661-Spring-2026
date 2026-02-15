@@ -11,6 +11,15 @@ import { SettingsScreen } from "./SettingsScreen";
 import { MessagesScreen } from "./MessagesScreen";
 import { ReportsScreen } from "./ReportsScreen";
 
+jest.mock("../components/navigation/AppLayout", () => {
+  const React = require("react");
+  const { View } = require("react-native");
+  return {
+    __esModule: true,
+    AppLayout: ({ children }: { children: React.ReactNode }) => <View>{children}</View>,
+  };
+});
+
 /**
  * Multi-screen integration workflow:
  * Settings -> Messages -> Reports

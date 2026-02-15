@@ -38,6 +38,7 @@ export function ForgotPasswordScreen() {
               autoCapitalize="none"
               returnKeyType="done"
               onSubmitEditing={onSend}
+              testID="forgot-password-email"
             />
 
             {sent ? (

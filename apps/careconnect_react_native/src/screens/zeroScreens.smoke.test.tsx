@@ -2,6 +2,9 @@
 import React from "react";
 import { render } from "@testing-library/react-native";
 import { renderWithProviders } from "../test-utils/renderWithProviders";
+import { AuthProvider } from "../context/AuthContext";
+import { SettingsProvider } from "../context/SettingsContext";
+import { ThemeProvider } from "../theme/ThemeProvider";
 
 /**
  * Navigation hooks (safe default).
@@ -285,7 +288,17 @@ describe("screens smoke for 0% screens", () => {
     const mod = require("./ProfileScreen");
     const Comp = pickComponent(mod, "ProfileScreen");
     expect(Comp).toBeTruthy();
-    expect(() => renderWithProviders(<Comp />)).not.toThrow();
+    expect(() =>
+      render(
+        <AuthProvider>
+          <SettingsProvider>
+            <ThemeProvider>
+              <Comp />
+            </ThemeProvider>
+          </SettingsProvider>
+        </AuthProvider>
+      )
+    ).not.toThrow();
   });
 
   it("renders SymptomsScreen", () => {

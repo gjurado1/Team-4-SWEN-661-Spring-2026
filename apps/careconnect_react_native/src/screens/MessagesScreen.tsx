@@ -68,7 +68,13 @@ export function MessagesScreen() {
             <Text style={{ fontWeight: '900', fontSize: 18 * textScale, marginBottom: 10 }}>
               To: {selected?.name}
             </Text>
-            <AppTextarea label="Message" value={draft} onChangeText={setDraft} placeholder="Type your message..." />
+            <AppTextarea
+              label="Message"
+              value={draft}
+              onChangeText={setDraft}
+              placeholder="Type your message..."
+              testID="messages-compose-input"
+            />
             <View style={{ marginTop: 10 }}>
               <AppButton
                 title="Send"
@@ -80,6 +86,7 @@ export function MessagesScreen() {
                 }}
                 expand
                 accessibilityHint="Send message"
+                testID="messages-send-button"
               />
             </View>
           </AppCard>

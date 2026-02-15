@@ -243,7 +243,13 @@ export function SettingsScreen() {
         <View style={{ gap: 16 }}>
           {/* Top row like the screenshot: back + title/subtitle */}
           <View style={styles.topRow}>
-            <AppButton title="Back" variant="secondary" onPress={handleBack} accessibilityLabel="Back" />
+            <AppButton
+              title="Back"
+              variant="secondary"
+              onPress={handleBack}
+              accessibilityLabel="Back"
+              testID="settings-back-button"
+            />
             <View style={{ flex: 1 }}>
               <Text style={{ fontWeight: "900", fontSize: 22 * textScale }}>Settings</Text>
               <Text style={{ color: theme.colors.textMuted }}>Theme, contrast, voice, and more</Text>

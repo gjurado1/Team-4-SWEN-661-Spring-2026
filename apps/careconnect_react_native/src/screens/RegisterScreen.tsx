@@ -55,9 +55,30 @@ export function RegisterScreen() {
 
         <AppCard>
           <View style={{ gap: 12 }}>
-            <AppInput label="Username" value={username} onChangeText={setUsername} placeholder="Choose a username" />
-            <AppInput label="Password" value={password} onChangeText={setPassword} placeholder="Choose a password" secureTextEntry />
-            <AppInput label="Confirm password" value={confirm} onChangeText={setConfirm} placeholder="Re-enter password" secureTextEntry onSubmitEditing={onSubmit} />
+            <AppInput
+              label="Username"
+              value={username}
+              onChangeText={setUsername}
+              placeholder="Choose a username"
+              testID="register-username"
+            />
+            <AppInput
+              label="Password"
+              value={password}
+              onChangeText={setPassword}
+              placeholder="Choose a password"
+              secureTextEntry
+              testID="register-password"
+            />
+            <AppInput
+              label="Confirm password"
+              value={confirm}
+              onChangeText={setConfirm}
+              placeholder="Re-enter password"
+              secureTextEntry
+              onSubmitEditing={onSubmit}
+              testID="register-confirm-password"
+            />
 
             {error ? <AppAlert variant="error" message={error} /> : null}
             {ok ? <AppAlert variant="success" message={ok} /> : null}

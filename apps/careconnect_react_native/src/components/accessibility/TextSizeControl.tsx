@@ -33,6 +33,7 @@ export default function TextSizeControl() {
             <Pressable
               key={p.label}
               onPress={() => setTextScale(p.value)}
+              testID={`settings-textsize-${Math.round(p.value * 100)}`}
               style={[
                 styles.tile,
                 {
