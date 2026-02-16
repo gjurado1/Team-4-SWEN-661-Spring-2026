@@ -1,0 +1,51 @@
+# Emergency Access Flow Test
+# Tests: Emergency access from both patient and caregiver perspectives
+appId: com.example.mobileFlutter
+---
+- launchApp
+- assertVisible: "Sign In"
+
+# Test as Patient
+- scroll
+- tapOn: ".*Patient Account.*"
+- assertVisible: ".*Hello, Sarah.*"
+
+# Access emergency from patient via menu
+- tapOn: ".*Menu.*"
+- tapOn: ".*Emergency.*"
+- assertVisible: ".*Emergency.*"
+- assertVisible: ".*Need Immediate Help?.*"
+
+# Return to dashboard via menu
+- tapOn: ".*Menu.*"
+- tapOn: ".*Home.*"
+- assertVisible: ".*Hello, Sarah.*"
+
+# Logout and test as Caregiver
+- tapOn: ".*Menu.*"
+- tapOn: ".*Logout.*"
+- assertVisible: "Sign In"
+- scroll
+- tapOn: ".*Caregiver Account.*"
+- assertVisible: ".*Welcome back.*"
+
+# Access emergency from caregiver via menu
+- tapOn: ".*Menu.*"
+- tapOn: ".*Emergency.*"
+- assertVisible: ".*Emergency.*"
+- assertVisible: ".*Need Immediate Help?.*"
+
+# Return to dashboard via menu
+- tapOn: "Menu"
+- tapOn: ".*Home.*"
+- assertVisible: ".*Welcome back.*"
+
+# Test emergency access from Patient List screen
+- tapOn: ".*All Patients.*"
+- assertVisible: ".*All Patients.*"
+- tapOn: "Menu"
+- tapOn: ".*Emergency.*"
+- assertVisible: ".*Emergency.*"
+- tapOn: ".*Menu.*"
+- tapOn: ".*Home.*"
+- assertVisible: ".*Welcome back.*"

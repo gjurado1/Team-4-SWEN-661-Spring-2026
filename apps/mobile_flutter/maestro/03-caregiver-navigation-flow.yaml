@@ -1,0 +1,58 @@
+# Caregiver Navigation Flow Test
+# Tests: Caregiver dashboard navigation, patient list, schedule, and key screens
+appId: com.example.mobileFlutter
+---
+- launchApp
+- assertVisible: "Sign In"
+
+# Login as caregiver using demo button
+- scroll
+- tapOn: ".*Caregiver Account.*"
+- assertVisible: ".*Welcome back.*"
+
+# Verify dashboard elements
+- assertVisible: ".*Active Patients.*"
+- assertVisible: ".*Schedule.*"
+- assertVisible: ".*All Patients.*"
+- scrollUntilVisible:
+    element:
+      text: "Upcoming Check-Ins"
+    direction: DOWN
+    timeout: 3000
+- assertVisible: "Upcoming Check-Ins"
+
+# Navigate to Patient List via quick action button
+- scroll
+- tapOn: "All Patients"
+- assertVisible: ".*All Patients.*"
+
+# Navigate to Schedule via menu
+- tapOn: ".*Menu.*"
+- tapOn: ".*Schedule.*"
+- assertVisible: ".*Schedule.*"
+
+# Navigate to Messages via menu
+- tapOn: "Menu"
+- tapOn: ".*Messages.*"
+- assertVisible: ".*Messages.*"
+
+# Navigate to Profile via menu
+- tapOn: "Menu"
+- tapOn: ".*Profile.*"
+- assertVisible: ".*Profile.*"
+
+# Navigate to Settings via menu
+- tapOn: "Menu"
+- tapOn: ".*Settings.*"
+- assertVisible: ".*Settings.*"
+
+# Navigate to Emergency via menu
+- tapOn: "Menu"
+- tapOn: ".*Emergency.*"
+- assertVisible: ".*Emergency.*"
+
+# Return to dashboard via menu
+- tapOn: ".*Menu.*"
+- tapOn: ".*Home.*"
+- assertVisible: ".*Welcome back.*"
+- assertVisible: ".*Upcoming Check-Ins.*"

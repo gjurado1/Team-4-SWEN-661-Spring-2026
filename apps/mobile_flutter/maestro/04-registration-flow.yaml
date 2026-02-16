@@ -1,0 +1,71 @@
+# Registration Flow Test
+# Tests: Complete user registration through all 5 steps
+appId: com.example.mobileFlutter
+---
+- launchApp
+- assertVisible: "Sign In"
+
+# Navigate to registration
+- scrollUntilVisible:
+    element:
+      text: "Create Account"
+    direction: DOWN
+    timeout: 5000
+- tapOn: "Create Account"
+- assertVisible: "Create Your CareConnect Account"
+- assertVisible: "Step 1 of 5"
+
+# Step 1: Select role (Patient)
+- assertVisible: "Account Role"
+- tapOn: ".*Care Recipient.*"
+- tapOn: ".*Next.*"
+
+# Step 2: Personal Information
+- assertVisible: "Step 2 of 5"
+- assertVisible: ".*Personal Information.*"
+- tapOn: "Enter first name"
+- inputText: "John"
+- tapOn: "Enter last name"
+- inputText: "Doe"
+- scroll
+- tapOn: "mm / dd / yyyy"
+- inputText: "01/15/1980"
+- tapOn: ".*Next.*"
+
+# Step 3: Contact Information
+- assertVisible: "Step 3 of 5"
+- assertVisible: "Contact Information"
+- tapOn: "(555) 123-4567"
+- inputText: "5551234567"
+- tapOn: "your@email.com"
+- inputText: "john.doe@example.com"
+- scrollUntilVisible:
+    element:
+      text: "Next"
+    direction: DOWN
+    timeout: 3000
+- tapOn: "123 Main Street"
+- inputText: "123 Main Street"
+- tapOn: "Enter city"
+- inputText: "Springfield"
+- scroll
+- tapOn: "IL"
+- inputText: "IL"
+- tapOn: "62701"
+- inputText: "62701"
+- tapOn: "Next"
+
+# Step 4: Preferences
+- assertVisible: "Step 4 of 5"
+- assertVisible: "Account Setup Complete!"
+- tapOn: "Next"
+
+# Step 5: Review
+- assertVisible: "Step 5 of 5"
+- assertVisible: "Review"
+- assertVisible: "John Doe"
+- assertVisible: "john.doe@example.com"
+- tapOn: "Complete"
+
+# Verify redirect to login
+- assertVisible: "Sign In"
