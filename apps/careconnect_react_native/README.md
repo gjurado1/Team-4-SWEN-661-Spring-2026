@@ -109,6 +109,36 @@ npx jest --coverage
 
 The report is auto-generated and can be viewed at: `coverage/lcov-report/index.html`.
 
+### Running Detox E2E Tests (Android)
+
+Detox tests run against the Android emulator configuration:
+- `android.emu.debug`
+- AVD name: `Medium_Phone_API_36.1`
+
+1. Start your Android emulator (or let Detox boot it if available in your setup).
+2. From `apps/careconnect_react_native`, run:
+
+```bash
+npm run detox:android
+```
+
+This command starts Metro and runs Detox using your project script at `scripts/detox-android.ps1`.
+
+Alternative split commands:
+
+```bash
+npm run detox:build
+npm run detox:test
+```
+
+If Detox reports no development build installed, run:
+
+```bash
+npx expo run:android
+```
+
+Then re-run `npm run detox:android`.
+
 ### Current Coverage Stats
 
 | Metric | Result | 
