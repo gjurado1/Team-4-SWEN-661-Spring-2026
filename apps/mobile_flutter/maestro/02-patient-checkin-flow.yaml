@@ -1,0 +1,46 @@
+# Patient Check-In Flow Test
+# Tests: Patient check-in process with mood selection and symptom entry
+appId: com.example.mobileFlutter
+---
+- launchApp
+- assertVisible: "Sign In"
+
+# Login as patient using demo button
+- scrollUntilVisible:
+    element:
+      text: ".*Patient Account.*"
+    direction: DOWN
+    timeout: 5000
+- tapOn: ".*Patient Account.*"
+- assertVisible: ".*Hello, Sarah.*"
+
+# Navigate to check-in using the Start Check-In button on dashboard
+- tapOn: ".*Start Check-In.*"
+- assertVisible: ".*Daily Check-In.*"
+- assertVisible: ".*How are you feeling today?.*"
+
+# Select a mood
+- tapOn: ".*Great.*"
+
+# Enter symptoms/notes
+- tapOn: ".*Describe any symptoms, feelings, or important notes?...*"
+- inputText: "Feeling good today. No symptoms to report."
+
+- scroll
+
+# Submit check-in
+- tapOn: ".*Submit Check-In.*"
+
+# Verify return to dashboard
+- assertVisible: ".*Hello, Sarah.*"
+- assertVisible: ".*Daily Check-In.*"
+
+# Test check-in with different mood
+- tapOn: ".*Start Check-In.*"
+- assertVisible: "Daily Check-In"
+- tapOn: ".*Neutral.*"
+- tapOn: ".*Describe any symptoms, feelings, or important notes?...*"
+- inputText: "Feeling okay, slight headache"
+- scroll
+- tapOn: ".*Submit Check-In.*"
+- assertVisible: ".*Hello, Sarah.*"

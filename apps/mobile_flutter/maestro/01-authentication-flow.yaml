@@ -1,0 +1,114 @@
+# Authentication Flow Test
+# Tests: Login page, patient/caregiver demo logins, logout, and invalid credentials
+appId: com.example.mobileFlutter
+---
+# Launch app and verify login page
+- launchApp
+- assertVisible: "Sign In"
+- assertVisible: "Sign in to your account"
+
+# Test Patient Demo Login
+# Scroll down to make demo section visible - use "Demo Credentials" as landmark
+- scrollUntilVisible:
+    element:
+      text: "Demo Credentials"
+    direction: DOWN
+    timeout: 15000
+
+# Wait for UI to settle
+- waitForAnimationToEnd
+
+# Now scroll a bit more to ensure Patient Account button is fully visible
+- scroll
+
+# Wait a moment
+- waitForAnimationToEnd
+
+# Tap on Patient Account - now with Semantics, we can use the title text
+# Try both with and without emoji - Maestro should match via Semantics label
+- tapOn:
+    text: ".*Username:.*testpatient.*"
+
+
+# Wait for navigation and verify patient dashboard loaded
+- assertVisible: 
+    text: ".*Hello, Sarah.*"
+- assertVisible: 
+    text: ".*Daily Check-In.*"
+
+# Logout via bottom menu
+- tapOn: "Menu"
+- assertVisible: 
+    text: ".*Logout.*"
+- tapOn: 
+    text: ".*Logout.*"
+
+# Verify we're back at login page
+- assertVisible: 
+    text: ".*Sign In.*"
+- assertVisible: 
+    text: ".*Sign in to your account.*"
+
+# Test Caregiver Demo Login
+# Scroll down to find demo section again
+- scrollUntilVisible:
+    element:
+      text: "Demo Credentials"
+    direction: DOWN
+    timeout: 15000
+
+# Wait for UI to settle
+- waitForAnimationToEnd
+
+# Scroll a bit more to ensure Caregiver Account button is visible
+- scroll
+- waitForAnimationToEnd
+
+# Tap on Caregiver Account - using Semantics label
+- tapOn: 
+    text: ".*Caregiver Account.*"
+
+# Wait for navigation and verify caregiver dashboard loaded
+- assertVisible: 
+    text: ".*Welcome back.*"
+- assertVisible: 
+    text: ".*All Patients.*"
+- assertVisible: 
+    text: ".*Schedule.*"
+
+# Logout via bottom menu
+- tapOn: "Menu"
+- assertVisible: 
+    text: ".*Logout.*"
+- tapOn: 
+    text: ".*Logout.*"
+
+# Verify we're back at login page
+- assertVisible: 
+    text: ".*Sign In.*"
+- assertVisible: 
+    text: ".*Sign in to your account.*"
+
+# Test Invalid Credentials
+# Scroll to top to see the login form
+- scrollUntilVisible:
+    element:
+      text: "Enter your username"
+    direction: UP
+    timeout: 10000
+
+# Wait for form to be ready
+- waitForAnimationToEnd
+
+# Enter invalid credentials
+- tapOn: "Enter your username"
+- inputText: "invaliduser"
+- tapOn: "Enter your password"
+- inputText: "wrongpassword"
+- tapOn: "Sign In"
+
+# Wait for error to appear
+- waitForAnimationToEnd
+
+# Verify error message appears
+- assertVisible: "Invalid username or password. Please try again."
