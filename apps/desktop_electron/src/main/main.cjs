@@ -3,6 +3,7 @@ const { app, BrowserWindow, Tray, Menu } = require("electron");
 const { loadWindowState, saveWindowState } = require("./windowState.cjs");
 const { createAppMenu } = require("./menu.cjs");
 const { registerIpcHandlers } = require("./ipc.cjs");
+const { wireWindowStatePersistence } = require("./windowLifecycle.cjs");
 
 const APP_ROOT = path.resolve(__dirname, "..", "..");
 const PRELOAD_PATH = path.join(__dirname, "preload.cjs");
@@ -43,15 +44,10 @@ function createMainWindow() {
     mainWindow.show();
   });
 
-  const persistBounds = () => {
-    if (!mainWindow || mainWindow.isDestroyed()) return;
-    if (mainWindow.isMinimized() || mainWindow.isMaximized()) return;
-    saveWindowState(app.getPath("userData"), mainWindow.getBounds());
-  };
-
-  mainWindow.on("resize", persistBounds);
-  mainWindow.on("move", persistBounds);
-  mainWindow.on("close", persistBounds);
+  wireWindowStatePersistence(mainWindow, {
+    getUserDataPath: () => app.getPath("userData"),
+    saveWindowState
+  });
 
   createAppMenu(mainWindow);
   registerIpcHandlers(mainWindow);

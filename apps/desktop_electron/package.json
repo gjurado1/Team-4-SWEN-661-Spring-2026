@@ -12,10 +12,13 @@
     "dev:electron": "wait-on tcp:5173 && cross-env ELECTRON_RENDERER_URL=http://localhost:5173 electron src/main/main.cjs",
     "lint": "eslint \"src/**/*.cjs\" \"test/**/*.mjs\"",
     "test": "vitest run",
+    "test:coverage:integration": "vitest run --config vitest.integration.config.mjs --coverage",
+    "test:coverage:unit": "vitest run --config vitest.unit.config.mjs --coverage",
     "build:renderer": "npm --prefix ../desktop_vite run build && node scripts/sync-renderer.cjs",
     "dist": "npm run build:renderer && electron-builder"
   },
   "devDependencies": {
+    "@vitest/coverage-v8": "^3.2.4",
     "concurrently": "^9.1.2",
     "cross-env": "^7.0.3",
     "electron": "^35.0.0",
