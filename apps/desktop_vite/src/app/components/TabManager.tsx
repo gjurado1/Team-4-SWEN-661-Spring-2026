@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { X, Plus } from 'lucide-react';
 import { Outlet, useNavigate, useLocation } from 'react-router';
+import { getPageTitle } from '../lib/routing';
 
 export interface Tab {
   id: string;
@@ -80,37 +81,6 @@ export function TabManager({ onTabChange }: TabManagerProps) {
 
   function generateTabId(): string {
     return `tab-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
-  }
-
-  function getPageTitle(path: string): string {
-    const routeTitles: Record<string, string> = {
-      '/dashboard': 'Dashboard',
-      '/dashboard/patients': 'Patient List',
-      '/dashboard/email': 'Email',
-      '/dashboard/medications': 'Medication Schedule',
-      '/dashboard/appointments': 'Appointments',
-      '/dashboard/settings': 'Settings',
-      '/dashboard/help': 'Help',
-      '/dashboard/shortcuts': 'Keyboard Shortcuts',
-      '/dashboard/ui-library': 'UI Library',
-      '/dashboard/accessibility-annotations': 'Accessibility Annotations',
-      '/dashboard/patient-overview': 'Patient Overview',
-      '/dashboard/my-care': 'My Care Plan',
-      '/dashboard/my-medications': 'My Medications',
-      '/dashboard/my-appointments': 'My Appointments',
-      '/dashboard/health-journal': 'Health Journal',
-    };
-
-    if (routeTitles[path]) return routeTitles[path];
-    if (path.startsWith('/dashboard/patients/')) return 'Patient Details';
-
-    const lastSegment = path.split('/').filter(Boolean).pop();
-    if (!lastSegment) return 'Dashboard';
-
-    return lastSegment
-      .split('-')
-      .map((segment) => segment.charAt(0).toUpperCase() + segment.slice(1))
-      .join(' ');
   }
 
   function updateActiveTabTitle(title: string) {
